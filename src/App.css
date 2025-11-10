@@ -1,0 +1,50 @@
+html,
+body {
+  overflow-x: hidden;
+  width: 100%;
+}
+
+.row {
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+  filter: invert(1); /* changes arrows from black to white */
+}
+
+/* Navbar styles */
+nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 70px; /* adjust your navbar height */
+  background-color: #fff;
+  z-index: 1000;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Footer styles */
+footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 60px; /* adjust your footer height */
+  background-color: #f1f1f1;
+  z-index: 1000;
+  box-shadow: 0 -2px 4px rgba(0,0,0,0.1);
+}
+
+/* Content wrapper padding */
+.content-wrapper {
+  padding-top: 70px;    /* same as navbar height */
+  padding-bottom: 60px; /* same as footer height */
+  min-height: calc(100vh - 130px); /* viewport height minus navbar+footer */
+  background-color: #fff;
+  box-sizing: border-box;
+}
+
+

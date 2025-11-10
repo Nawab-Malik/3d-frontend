@@ -1,0 +1,294 @@
+.checkout-flow {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 20px;
+}
+
+.checkout-steps {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 40px;
+  gap: 20px;
+}
+
+.checkout-step {
+  padding: 12px 30px;
+  background: #f5f5f5;
+  border-radius: 25px;
+  font-weight: 600;
+  color: #666;
+  transition: all 0.3s;
+}
+
+.checkout-step.active {
+  background: #000;
+  color: #fff;
+}
+
+.checkout-step.completed {
+  background: #4caf50;
+  color: #fff;
+}
+
+.checkout-form {
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.checkout-form h2 {
+  margin: 0 0 25px 0;
+  font-size: 24px;
+}
+
+.checkout-form input,
+.checkout-form select {
+  width: 100%;
+  padding: 12px 16px;
+  margin-bottom: 15px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 16px;
+  transition: border-color 0.2s;
+}
+
+.checkout-form input:focus,
+.checkout-form select:focus {
+  outline: none;
+  border-color: #000;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.form-row input,
+.form-row select {
+  margin-bottom: 0;
+}
+
+.coupon-section {
+  margin: 30px 0;
+  padding: 20px;
+  background: #f9f9f9;
+  border-radius: 8px;
+}
+
+.coupon-section h3 {
+  margin: 0 0 15px 0;
+  font-size: 18px;
+}
+
+.coupon-input-group {
+  display: flex;
+  gap: 10px;
+}
+
+.coupon-input-group input {
+  flex: 1;
+  margin-bottom: 0;
+}
+
+.apply-coupon-btn,
+.remove-coupon-btn {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+  white-space: nowrap;
+}
+
+.apply-coupon-btn {
+  background: #000;
+  color: white;
+}
+
+.apply-coupon-btn:hover:not(:disabled) {
+  background: #333;
+}
+
+.apply-coupon-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.remove-coupon-btn {
+  background: #f44336;
+  color: white;
+}
+
+.remove-coupon-btn:hover {
+  background: #d32f2f;
+}
+
+.coupon-message {
+  margin: 10px 0 0 0;
+  padding: 10px;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.coupon-message.success {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.coupon-message.error {
+  background: #ffebee;
+  color: #c62828;
+}
+
+.order-summary {
+  margin: 30px 0;
+  padding: 20px;
+  background: #f5f5f5;
+  border-radius: 8px;
+}
+
+.order-summary h3 {
+  margin: 0 0 15px 0;
+  font-size: 18px;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.summary-row:last-child {
+  border-bottom: none;
+}
+
+.summary-row.discount {
+  color: #4caf50;
+  font-weight: 600;
+}
+
+.summary-row.total {
+  font-size: 20px;
+  font-weight: bold;
+  padding-top: 15px;
+  margin-top: 10px;
+  border-top: 2px solid #000;
+}
+
+.terms-checkbox {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 20px 0;
+}
+
+.terms-checkbox input[type="checkbox"] {
+  width: auto;
+  margin: 4px 0 0 0;
+}
+
+.terms-checkbox label {
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.terms-checkbox a {
+  color: #000;
+  text-decoration: underline;
+}
+
+.continue-btn,
+.pay-btn,
+.back-btn {
+  padding: 14px 30px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.continue-btn,
+.pay-btn {
+  width: 100%;
+  background: #000;
+  color: white;
+}
+
+.continue-btn:hover,
+.pay-btn:hover:not(:disabled) {
+  background: #333;
+}
+
+.pay-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.payment-section {
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.payment-section h2 {
+  margin: 0 0 25px 0;
+  font-size: 24px;
+}
+
+.payment-buttons {
+  display: flex;
+  gap: 15px;
+  margin-top: 30px;
+}
+
+.back-btn {
+  background: #e0e0e0;
+  color: #000;
+  flex: 1;
+}
+
+.back-btn:hover {
+  background: #d0d0d0;
+}
+
+.pay-btn {
+  flex: 2;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .checkout-flow {
+    padding: 10px;
+  }
+
+  .checkout-steps {
+    gap: 10px;
+  }
+
+  .checkout-step {
+    padding: 10px 20px;
+    font-size: 14px;
+  }
+
+  .checkout-form,
+  .payment-section {
+    padding: 20px;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .payment-buttons {
+    flex-direction: column;
+  }
+}

@@ -1,0 +1,18 @@
+/* 
+
+@media (max-width: 1220px) {
+  .hamburger {
+    display: block !important;
+    margin-left: 500px;
+  }
+  .navbar-tabs,
+  .navbar-tabs ul {
+    display: none !important;
+  }
+  .navbar-tabs {
+    width: 0 !important;
+  }
+  .contact-tab button {
+    display: none !important;
+  }
+} */

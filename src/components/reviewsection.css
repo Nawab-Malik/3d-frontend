@@ -1,0 +1,118 @@
+@media (max-width: 1328px) {
+  .reviews-cards {
+    margin: 1rem;
+  }
+  .reviews-column-left {
+    margin-left: 1rem;
+  }
+}
+
+@media (max-width: 1314px) {
+  .reviews-cards {
+    margin: 1rem;
+  }
+  .reviews-column-left {
+    margin-left: 1.4rem;
+  }
+}
+
+@media (max-width: 1274px) {
+  .reviews-cards {
+    margin: 1.3rem;
+  }
+  .reviews-column-left {
+    margin-left: 1.7rem;
+  }
+}
+
+@media (max-width: 1261px) {
+  .review-block {
+    margin-left: 1rem;
+  }
+  .reviews-cards {
+    margin: 1rem;
+  }
+  .reviews-column-left {
+    margin-left: 2rem;
+  }
+}
+
+@media (max-width: 1241px) {
+  .review-block {
+    padding-left: 1rem;
+  }
+}
+
+@media (max-width: 992px) {
+  /* 992px is Bootstrap's md breakpoint */
+  .review-right {
+    white-space: normal !important;
+  }
+}
+
+@media (max-width: 768px) {
+  /* for tablets and mobile */
+  .review-right {
+    white-space: normal !important ;
+  }
+}
+
+@media (max-width: 739px) {
+  .review-right {
+    white-space: normal !important;
+  }
+}
+
+@media (max-width: 396px) {
+  .review-right {
+    white-space: normal;
+  }
+  .review-block {
+    padding: -2rem;
+  }
+  .reviews-column-right {
+    margin-right: 2rem;
+  }
+}
+
+@media (max-width: 379px) {
+  .review-block {
+    padding: -1.3rem;
+  }
+}
+
+@media (max-width: 376px) {
+  .review-block {
+    padding: -1.3rem;
+  }
+}
+
+@media (max-width: 340px) {
+  .review-block {
+    padding: 1.3rem;
+  }
+  .review-item {
+    padding: "25px 10px";
+  }
+}
+
+@media (max-width: 380px) {
+  .review-item {
+    padding: "25px 5px";
+  }
+  .section-rev {
+    padding-left: 1rem;
+  }
+}
+
+@media (max-width: 375px) {
+  .review-item {
+    padding: "25px 5px";
+  }
+  .section-rev {
+    padding-right: -1.7rem;
+  }
+  .reviews-cards {
+    margin-left: -2rem;
+  }
+}

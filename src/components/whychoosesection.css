@@ -1,0 +1,93 @@
+/* Tablet (≤ 992px) */
+@media (max-width: 1234px) {
+  .heading {
+    margin-left: 2rem;
+  }
+  .para {
+    margin-left: 2rem;
+    font-size: 20px;
+  }
+}
+
+/* Mobile (≤ 768px) */
+@media (max-width: 1098px) {
+  .heading {
+    margin-left: 2rem;
+  }
+}
+
+@media (max-width: 1365px) {
+  .hero-section {
+    margin-top: 100px !important;
+  }
+  .hero-heading {
+    font-size: 55px !important;
+  }
+}
+
+@media (max-width: 1340px) {
+  .hero-heading {
+    font-size: 45px !important;
+  }
+  .hero-image {
+    height: 450px !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero-heading {
+    margin-top: 4rem;
+    font-size: 35px !important;
+  }
+  .hero-image {
+    height: 350px !important;
+  }
+}
+
+@media (max-width: 766px) {
+  .hero-heading {
+    margin-top: 4rem;
+    font-size: 30px !important;
+  }
+  .hero-image {
+    height: 350px !important;
+  }
+}
+
+@media (max-width: 649px) {
+  .hero-heading {
+    margin-top: 4rem !important;
+    font-size: 28px !important;
+  }
+  .hero-image {
+    height: 250px !important;
+  }
+}
+
+@media (max-width: 390px) {
+  .hero-heading {
+    margin-top: 3rem !important;
+    font-size: 23px !important;
+  }
+  .hero-image {
+    height: 200px !important;
+  }
+}
+
+@media (max-width: 320px) {
+  .hero-heading {
+    margin-top: 7rem !important;
+    font-size: 23px !important;
+  }
+  .hero-image {
+    height: 200px !important;
+  }
+  .hero-para {
+    font-size: 12px !important;
+  }
+  .hero-btn {
+    padding: 5px 10px !important;
+    font-size: 12px !important;
+    margin-top: -2rem;
+  }
+}

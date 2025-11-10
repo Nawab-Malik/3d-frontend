@@ -1,0 +1,37 @@
+.hero-section {
+  background: url('/images/background.jpg') no-repeat center center/cover;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  color: white;
+}
+
+.hero-title {
+  font-family: 'Staatliches', sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 72px;
+  line-height: 85px;
+  letter-spacing: 0;
+  text-transform: capitalize;
+  margin-bottom: 20px;
+}
+
+.hero-title .highlight {
+  color: #ffffff;
+}
+
+.hero-subtitle {
+  font-size: 24px;
+  font-weight: 300;
+  margin-top: 10px;
+}
+
+.hero-image {
+  max-width: 90%;
+}
+
+
+.middle-content {
+  margin-top: 12rem;
+}

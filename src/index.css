@@ -1,0 +1,75 @@
+ :root {
+   --sr-duration: 600ms;
+   --sr-ease: cubic-bezier(0.22, 1, 0.36, 1);
+ }
+
+ .reveal-on-scroll.sr-init {
+   opacity: 0;
+   transform: translateY(16px) scale(0.98);
+   transition: opacity var(--sr-duration) var(--sr-ease), transform var(--sr-duration) var(--sr-ease);
+   will-change: opacity, transform;
+ }
+
+.reveal-on-scroll.sr-show {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal-on-scroll.sr-init {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+.reveal-on-scroll {
+  transition-delay: var(--sr-delay, 0ms);
+}
+
+.sr-left.sr-init { 
+  transform: translateX(-18px) scale(0.98); 
+}
+
+.sr-right.sr-init { 
+  transform: translateX(18px) scale(0.98); 
+}
+
+.sr-zoom.sr-init { 
+  transform: translateY(16px) scale(0.94); 
+}
+
+.sr-blur.sr-init { 
+  filter: blur(6px); 
+}
+
+.sr-blur.sr-show { 
+  filter: none; 
+}
+
+.sr-slow { 
+  --sr-duration: 900ms; 
+}
+
+.sr-fast { 
+  --sr-duration: 400ms; 
+}
+
+/* Tilt hover utility */
+.tilt {
+  transform: perspective(900px) rotateX(0) rotateY(0) scale(1);
+  transform-style: preserve-3d;
+  transition: transform var(--sr-duration) var(--sr-ease), box-shadow 300ms ease;
+  will-change: transform;
+}
+
+/* Mask reveal (optional utility for images/sections) */
+.mask-reveal.sr-init {
+  opacity: 0;
+  clip-path: inset(0 0 100% 0);
+  transition: opacity var(--sr-duration) var(--sr-ease), clip-path var(--sr-duration) var(--sr-ease);
+}
+.mask-reveal.sr-show {
+  opacity: 1;
+  clip-path: inset(0 0 0 0);
+}

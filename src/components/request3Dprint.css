@@ -1,0 +1,125 @@
+@import url("https://fonts.googleapis.com/css2?family=Staatliches&display=swap");
+
+.request-title {
+  font-family: "Staatliches", sans-serif;
+  font-size: 72px;
+  line-height: 100%;
+  text-transform: capitalize;
+}
+
+.title-colored {
+  color: #514f6e;
+}
+
+.step-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.step-circle {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+
+.active-step {
+  background-color: #6f6c8f;
+  color: white;
+}
+
+.inactive-step {
+  background-color: #e0e0e0;
+  color: black;
+}
+
+.choose-shape-text {
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: #333;
+}
+
+.shape-card {
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-height: 200px;
+}
+
+.shape-card:hover {
+  border-color: #6f6c8f;
+  transform: translateY(-4px);
+  box-shadow: 0px 4px 15px rgba(111, 108, 143, 0.2);
+}
+
+.shape-selected {
+  border: 2px solid #6f6c8f;
+}
+
+.shape-text {
+  font-size: 1rem;
+}
+
+.text-colored {
+  color: #6f6c8f;
+}
+
+.shape-image {
+  max-height: 170px;
+  object-fit: contain;
+}
+
+.btn-gradient {
+  background-color: #6f6c8f;
+  color: white;
+  border-radius: 8px;
+  transition: 0.3s ease;
+}
+
+.btn-gradient:hover {
+  opacity: 0.9;
+}
+
+.step-container {
+  margin-top: 3rem;
+}
+
+.shape-text {
+  margin-top: 4rem;
+}
+
+.shape-img {
+  margin-top: 5rem;
+  gap: 150px;
+}
+
+.btn-silver-gradient {
+  background: linear-gradient(90deg, #514f6e 0%, #9c98d4 100%);
+  border: none;
+  color: white;
+  font-weight: 500;
+  border-radius: 8px; /* slight rounded corners */
+  padding: 0.6rem 2rem;
+  transition: all 0.3s ease-in-out;
+
+  /* silver touch */
+  box-shadow: inset 0 0 0 1px rgba(192, 192, 192, 0.4),
+    0 4px 10px rgba(192, 192, 192, 0.3);
+}
+
+.btn-silver-gradient:hover {
+  box-shadow: inset 0 0 0 1px rgba(192, 192, 192, 0.6),
+    0 6px 14px rgba(192, 192, 192, 0.4);
+  transform: translateY(-2px);
+}
+
+.request-title {
+  font-family: "Staatliches", sans-serif;
+  font-size: 72px;
+  line-height: 100%;
+  text-transform: capitalize;
+}

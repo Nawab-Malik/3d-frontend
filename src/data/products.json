@@ -1,0 +1,82 @@
+[
+  {
+    "title": "Hircine Miniature",
+    "categories": ["ABS", "20cm", "Gray", "Miniature"],
+    "description": "A finely crafted 3D printed miniature of Hircine, the Daedric Prince of the Hunt from The Elder Scrolls universe.",
+    "price": 90,
+    "originalPrice": 120,
+    "imageUrl": "/images/product1.jpg"
+  },
+  {
+    "title": "Elder Scrolls Dragon",
+    "categories": ["PLA", "25cm", "Red", "Figurine"],
+    "description": "High-quality 3D printed dragon inspired by the Elder Scrolls series.",
+    "price": 110,
+    "originalPrice": 140,
+    "imageUrl": "/images/product2.jpg"
+  },
+  {
+    "title": "Mechanical Gear Model",
+    "categories": ["PETG", "15cm", "Black", "Mechanical"],
+    "description": "Functional mechanical gear model printed in durable PETG.",
+    "price": 75,
+    "originalPrice": 100,
+    "imageUrl": "/images/product3.jpg"
+  },
+  {
+    "title": "Custom Phone Case",
+    "categories": ["TPU", "7cm", "Transparent", "Accessory"],
+    "description": "Flexible 3D printed phone case customized to your device.",
+    "price": 25,
+    "originalPrice": 35,
+    "imageUrl": "/images/product4.jpg"
+  },
+  {
+    "title": "Miniature Robot",
+    "categories": ["ABS", "10cm", "White", "Toy"],
+    "description": "Cute miniature robot figurine perfect as a desk buddy.",
+    "price": 45,
+    "originalPrice": 60,
+    "imageUrl": "/images/product5.jpg"
+  },
+  {
+    "title": "Architectural Model",
+    "categories": ["PLA", "30cm", "Beige", "Model"],
+    "description": "Detailed architectural model for presentations and study.",
+    "price": 150,
+    "originalPrice": 180,
+    "imageUrl": "/images/product6.jpg"
+  },
+  {
+    "title": "Puzzle Cube",
+    "categories": ["PLA", "8cm", "Multicolor", "Puzzle"],
+    "description": "3D printed puzzle cube to challenge your brain.",
+    "price": 30,
+    "originalPrice": 40,
+    "imageUrl": "/images/product7.jpg"
+  },
+  {
+    "title": "Decorative Vase",
+    "categories": ["Ceramic-like", "20cm", "Blue", "Home Decor"],
+    "description": "Elegant 3D printed vase with a ceramic look and feel.",
+    "price": 70,
+    "originalPrice": 85,
+    "imageUrl": "/images/product8.jpg"
+  },
+  {
+    "title": "Gaming Keycaps Set",
+    "categories": ["ABS", "Standard", "Black/Red", "Accessory"],
+    "description": "Custom keycaps set for mechanical keyboards.",
+    "price": 60,
+    "originalPrice": 75,
+    "imageUrl": "/images/product9.jpg"
+  },
+  {
+    "title": "Desk Organizer",
+    "categories": ["PLA", "15cm", "Gray", "Office"],
+    "description": "Multi-compartment desk organizer for office supplies.",
+    "price": 40,
+    "originalPrice": 50,
+    "imageUrl": "/images/product10.jpg"
+  }
+]

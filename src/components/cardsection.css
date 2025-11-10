@@ -1,0 +1,12 @@
+@media (max-width: 676px) {
+  .mini-cards {
+    margin: 2rem;
+    margin-top: 3rem;
+  }
+}
+
+@media (max-width: 430px) {
+ .mini-cards {
+    margin-top: 0.4rem !important;
+  }
+}
