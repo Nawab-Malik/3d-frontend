@@ -1,7 +1,8 @@
 // pages/AdminLogin.js
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../context/AuthContext";
 import Navbar from "../components/navbar";
 import Footer from "../components/footer";
 
@@ -11,16 +12,14 @@ const AdminLogin = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const { isAuthenticated, isAdmin, login } = useContext(AuthContext);
 
   useEffect(() => {
-    try {
-      const token = localStorage.getItem("userToken");
-      const userData = JSON.parse(localStorage.getItem("userData") || "{}");
-      if (token && userData?.role === "admin") {
-        navigate("/admin/dashboard", { replace: true });
-      }
-    } catch (_) {}
-  }, [navigate]);
+    // Redirect if already logged in as admin
+    if (isAuthenticated && isAdmin) {
+      navigate("/admin/dashboard", { replace: true });
+    }
+  }, [isAuthenticated, isAdmin, navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -28,44 +27,39 @@ const AdminLogin = () => {
     setError("");
 
     try {
-      console.log("Attempting login with:", { email, password });
+      const loginData = {
+        email: email.trim().toLowerCase(),
+        password,
+      };
+
+      console.log("Admin login attempt with email:", loginData.email);
 
       const response = await axios.post(
-        "http://localhost:5000/api/users/login",
-        {
-          email: String(email || "").trim().toLowerCase(),
-          password,
-        }
+        "https://3-d-backend-3pgu.vercel.app/api/users/login",
+        loginData
       );
 
-      console.log("Login response:", response.data);
+      console.log("Admin login response:", response.data);
 
       if (response.data.success) {
-        // Check if user is admin
-        console.log("User role:", response.data.user.role);
-
         if (response.data.user.role === "admin") {
-          // Store token and user data
-          localStorage.setItem("userToken", response.data.token);
-          localStorage.setItem("userData", JSON.stringify(response.data.user));
+          // Use AuthContext to store admin login
+          login(response.data.user, response.data.token, true);
 
-          console.log("Admin login successful, redirecting to /admin/dashboard");
-          // Redirect to admin panel dashboard
-          navigate("/admin/dashboard");
+          navigate("/admin/dashboard", { replace: true });
         } else {
           setError("Access denied. Admin privileges required.");
         }
       }
     } catch (error) {
-      console.error("Login error:", error);
-      console.error("Error response:", error.response);
-
-      const msg = error.response?.data?.message || "Login failed. Please try again.";
-      const hint =
-        msg === "Invalid credentials"
-          ? " If this is the admin account, visit /api/setup/setup-admin?force=1 in the backend to reset the admin password and try again."
-          : "";
-      setError(msg + hint);
+      console.error("Admin login error details:", {
+        message: error.message,
+        response: error.response?.data,
+        status: error.response?.status,
+      });
+      const msg =
+        error.response?.data?.message || "Login failed. Please try again.";
+      setError(msg);
     } finally {
       setLoading(false);
     }

@@ -1,4 +1,4 @@
-import OrderTracking from '../components/OrderTracking';
+import OrderTracking from "../components/OrderTracking";
 
 /**
  * Track Order Page

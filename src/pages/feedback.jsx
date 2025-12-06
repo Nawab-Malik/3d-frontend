@@ -29,7 +29,7 @@ function FeedbackPage() {
       setSending(true);
       setError("");
       await axios.post(
-        "http://localhost:5000/api/feedback",
+        "https://3-d-backend-3pgu.vercel.app/api/feedback",
         { message, rating, email },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -46,7 +46,9 @@ function FeedbackPage() {
   return (
     <>
       <Navbar />
-      <main style={{ paddingTop: 140, background: "#0b0b10", minHeight: "100vh" }}>
+      <main
+        style={{ paddingTop: 140, background: "#0b0b10", minHeight: "100vh" }}
+      >
         <section
           style={{
             background:
@@ -54,7 +56,13 @@ function FeedbackPage() {
             color: "white",
           }}
         >
-          <div style={{ maxWidth: 1200, margin: "0 auto", padding: "80px 20px 40px" }}>
+          <div
+            style={{
+              maxWidth: 1200,
+              margin: "0 auto",
+              padding: "80px 20px 40px",
+            }}
+          >
             <h1
               style={{
                 fontFamily: "Staatliches, sans-serif",
@@ -66,13 +74,22 @@ function FeedbackPage() {
             >
               Feedback
             </h1>
-            <p style={{ color: "#cfd0d3", fontSize: 18, maxWidth: 680, marginTop: 14 }}>
+            <p
+              style={{
+                color: "#cfd0d3",
+                fontSize: 18,
+                maxWidth: 680,
+                marginTop: 14,
+              }}
+            >
               Share your experience with us. Your feedback helps us get better.
             </p>
           </div>
         </section>
 
-        <section style={{ maxWidth: 800, margin: "0 auto", padding: "20px 20px 80px" }}>
+        <section
+          style={{ maxWidth: 800, margin: "0 auto", padding: "20px 20px 80px" }}
+        >
           <div
             style={{
               background: "rgba(255,255,255,0.04)",
@@ -134,7 +151,9 @@ function FeedbackPage() {
                 />
               </div>
               <div style={{ marginBottom: 14 }}>
-                <label style={{ color: "#cfd0d3", fontSize: 13 }}>Your feedback</label>
+                <label style={{ color: "#cfd0d3", fontSize: 13 }}>
+                  Your feedback
+                </label>
                 <textarea
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
@@ -172,7 +191,11 @@ function FeedbackPage() {
                   }}
                 >
                   {[5, 4, 3, 2, 1].map((r) => (
-                    <option key={r} value={r} style={{ color: "black" }}>{`${r} Star${r > 1 ? "s" : ""}`}</option>
+                    <option
+                      key={r}
+                      value={r}
+                      style={{ color: "black" }}
+                    >{`${r} Star${r > 1 ? "s" : ""}`}</option>
                   ))}
                 </select>
               </div>
@@ -181,7 +204,8 @@ function FeedbackPage() {
                 type="submit"
                 disabled={sending}
                 style={{
-                  background: "linear-gradient(90deg, #514F6E 0%, #9C98D4 100%)",
+                  background:
+                    "linear-gradient(90deg, #514F6E 0%, #9C98D4 100%)",
                   color: "white",
                   border: "none",
                   padding: "12px 22px",

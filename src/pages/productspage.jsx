@@ -21,12 +21,16 @@ function ProductsPage() {
   const fetchProducts = async () => {
     try {
       setIsLoading(true);
-      const response = await axios.get("http://localhost:5000/api/products");
+      const response = await axios.get(
+        "https://3-d-backend-3pgu.vercel.app/api/products"
+      );
       let list = response.data.products || response.data || [];
       if (!Array.isArray(list) || list.length === 0) {
         // Fallback to local JSON; compute absolute image URLs to frontend/images
         list = (localProducts || []).map((p, i) => {
-          const fileName = String(p.imageUrl || "").split("/").pop();
+          const fileName = String(p.imageUrl || "")
+            .split("/")
+            .pop();
           let href = "";
           try {
             // Prefer src/assets (exists in repo)
@@ -47,7 +51,9 @@ function ProductsPage() {
       console.error("Error fetching products:", error);
       // On error, also fallback to local
       const list = (localProducts || []).map((p, i) => {
-        const fileName = String(p.imageUrl || "").split("/").pop();
+        const fileName = String(p.imageUrl || "")
+          .split("/")
+          .pop();
         let href = "";
         try {
           href = new URL(`../assets/${fileName}`, import.meta.url).href;
@@ -66,9 +72,12 @@ function ProductsPage() {
     }
   };
 
+  const getToken = () =>
+    localStorage.getItem("token") || localStorage.getItem("userToken");
+
   const handleAddToCart = async (product) => {
     try {
-      const token = localStorage.getItem("userToken");
+      const token = getToken();
 
       if (!token) {
         alert("Please login to add items to your cart");
@@ -76,7 +85,7 @@ function ProductsPage() {
       }
 
       await axios.post(
-        "http://localhost:5000/api/cart/add",
+        "https://3-d-backend-3pgu.vercel.app/api/cart/add",
         {
           productId: product._id,
           quantity: 1,
@@ -100,6 +109,8 @@ function ProductsPage() {
       console.error("Failed to add product to cart", error);
       if (error.response?.status === 401) {
         alert("Your session has expired. Please login again.");
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
         localStorage.removeItem("userToken");
         localStorage.removeItem("userData");
       } else {

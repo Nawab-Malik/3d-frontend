@@ -1,9 +1,11 @@
-import { useState, useEffect } from 'react';
-import axios from 'axios';
-import { loadStripe } from '@stripe/stripe-js';
-import './CheckoutFlow.css';
+import { useState, useEffect } from "react";
+import axios from "axios";
+import { loadStripe } from "@stripe/stripe-js";
+import "./CheckoutFlow.css";
 
-const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || 'pk_test_...');
+const stripePromise = loadStripe(
+  import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || "pk_test_..."
+);
 
 /**
  * Enhanced Checkout Flow Component
@@ -15,14 +17,14 @@ const CheckoutFlow = ({ cartItems, user }) => {
 
   // Shipping Information
   const [shippingInfo, setShippingInfo] = useState({
-    firstName: '',
-    lastName: '',
-    address: '',
-    city: '',
-    state: '',
-    postalCode: '',
-    country: 'GB',
-    phone: '',
+    firstName: "",
+    lastName: "",
+    address: "",
+    city: "",
+    state: "",
+    postalCode: "",
+    country: "GB",
+    phone: "",
   });
 
   // Pricing
@@ -33,9 +35,9 @@ const CheckoutFlow = ({ cartItems, user }) => {
   const [total, setTotal] = useState(0);
 
   // Coupon
-  const [couponCode, setCouponCode] = useState('');
+  const [couponCode, setCouponCode] = useState("");
   const [appliedCoupon, setAppliedCoupon] = useState(null);
-  const [couponMessage, setCouponMessage] = useState('');
+  const [couponMessage, setCouponMessage] = useState("");
 
   // Terms
   const [agreedToTerms, setAgreedToTerms] = useState(false);
@@ -55,14 +57,19 @@ const CheckoutFlow = ({ cartItems, user }) => {
   }, [subtotal, shippingCost, discount, tax]);
 
   const calculateSubtotal = () => {
-    const sum = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
+    const sum = cartItems.reduce(
+      (acc, item) => acc + item.price * item.quantity,
+      0
+    );
     setSubtotal(sum);
   };
 
   const calculateShipping = async () => {
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/shipping/calculate`,
+        `${
+          import.meta.env.VITE_API_URL || "https://3-d-backend-3pgu.vercel.app"
+        }/api/shipping/calculate`,
         {
           orderTotal: subtotal,
           country: shippingInfo.country,
@@ -71,14 +78,14 @@ const CheckoutFlow = ({ cartItems, user }) => {
 
       setShippingCost(response.data.shippingCost || 0);
     } catch (error) {
-      console.error('Error calculating shipping:', error);
+      console.error("Error calculating shipping:", error);
       setShippingCost(5.99); // Default shipping
     }
   };
 
   const calculateTotal = () => {
     const taxRate = 0.2; // 20% VAT for UK
-    const taxAmount = ((subtotal - discount) * taxRate);
+    const taxAmount = (subtotal - discount) * taxRate;
     setTax(taxAmount);
 
     const grandTotal = subtotal - discount + shippingCost + taxAmount;
@@ -87,16 +94,18 @@ const CheckoutFlow = ({ cartItems, user }) => {
 
   const handleApplyCoupon = async () => {
     if (!couponCode.trim()) {
-      setCouponMessage('Please enter a coupon code');
+      setCouponMessage("Please enter a coupon code");
       return;
     }
 
     setLoading(true);
-    setCouponMessage('');
+    setCouponMessage("");
 
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/coupons/validate`,
+        `${
+          import.meta.env.VITE_API_URL || "https://3-d-backend-3pgu.vercel.app"
+        }/api/coupons/validate`,
         {
           code: couponCode,
           subtotal,
@@ -110,10 +119,10 @@ const CheckoutFlow = ({ cartItems, user }) => {
         if (response.data.coupon.freeShipping) {
           setShippingCost(0);
         }
-        setCouponMessage('Coupon applied successfully!');
+        setCouponMessage("Coupon applied successfully!");
       }
     } catch (error) {
-      setCouponMessage(error.response?.data?.message || 'Invalid coupon code');
+      setCouponMessage(error.response?.data?.message || "Invalid coupon code");
       setAppliedCoupon(null);
       setDiscount(0);
     } finally {
@@ -124,8 +133,8 @@ const CheckoutFlow = ({ cartItems, user }) => {
   const handleRemoveCoupon = () => {
     setAppliedCoupon(null);
     setDiscount(0);
-    setCouponCode('');
-    setCouponMessage('');
+    setCouponCode("");
+    setCouponMessage("");
     calculateShipping(); // Recalculate shipping without free shipping
   };
 
@@ -140,16 +149,24 @@ const CheckoutFlow = ({ cartItems, user }) => {
     e.preventDefault();
 
     // Validate shipping info
-    const required = ['firstName', 'lastName', 'address', 'city', 'postalCode', 'country', 'phone'];
+    const required = [
+      "firstName",
+      "lastName",
+      "address",
+      "city",
+      "postalCode",
+      "country",
+      "phone",
+    ];
     const isValid = required.every((field) => shippingInfo[field].trim());
 
     if (!isValid) {
-      alert('Please fill in all required fields');
+      alert("Please fill in all required fields");
       return;
     }
 
     if (!agreedToTerms) {
-      alert('Please agree to the Terms & Conditions and Privacy Policy');
+      alert("Please agree to the Terms & Conditions and Privacy Policy");
       return;
     }
 
@@ -181,7 +198,9 @@ const CheckoutFlow = ({ cartItems, user }) => {
 
       // Create Stripe checkout session
       const response = await axios.post(
-        `${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/payment/create-checkout`,
+        `${
+          import.meta.env.VITE_API_URL || "https://3-d-backend-3pgu.vercel.app"
+        }/api/payment/create-checkout`,
         { orderData }
       );
 
@@ -190,8 +209,8 @@ const CheckoutFlow = ({ cartItems, user }) => {
         window.location.href = response.data.url;
       }
     } catch (error) {
-      console.error('Payment error:', error);
-      alert('Payment failed. Please try again.');
+      console.error("Payment error:", error);
+      alert("Payment failed. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -200,10 +219,14 @@ const CheckoutFlow = ({ cartItems, user }) => {
   return (
     <div className="checkout-flow">
       <div className="checkout-steps">
-        <div className={`checkout-step ${step === 1 ? 'active' : ''} ${step > 1 ? 'completed' : ''}`}>
+        <div
+          className={`checkout-step ${step === 1 ? "active" : ""} ${
+            step > 1 ? "completed" : ""
+          }`}
+        >
           1. Shipping
         </div>
-        <div className={`checkout-step ${step === 2 ? 'active' : ''}`}>
+        <div className={`checkout-step ${step === 2 ? "active" : ""}`}>
           2. Payment
         </div>
       </div>
@@ -319,7 +342,11 @@ const CheckoutFlow = ({ cartItems, user }) => {
               )}
             </div>
             {couponMessage && (
-              <p className={`coupon-message ${appliedCoupon ? 'success' : 'error'}`}>
+              <p
+                className={`coupon-message ${
+                  appliedCoupon ? "success" : "error"
+                }`}
+              >
                 {couponMessage}
               </p>
             )}
@@ -339,7 +366,9 @@ const CheckoutFlow = ({ cartItems, user }) => {
             )}
             <div className="summary-row">
               <span>Shipping:</span>
-              <span>{shippingCost === 0 ? 'FREE' : `£${shippingCost.toFixed(2)}`}</span>
+              <span>
+                {shippingCost === 0 ? "FREE" : `£${shippingCost.toFixed(2)}`}
+              </span>
             </div>
             <div className="summary-row">
               <span>Tax (VAT 20%):</span>
@@ -360,10 +389,14 @@ const CheckoutFlow = ({ cartItems, user }) => {
               required
             />
             <label htmlFor="terms">
-              I agree to the{' '}
-              <a href="/terms" target="_blank">Terms & Conditions</a>{' '}
-              and{' '}
-              <a href="/privacy" target="_blank">Privacy Policy</a>
+              I agree to the{" "}
+              <a href="/terms" target="_blank">
+                Terms & Conditions
+              </a>{" "}
+              and{" "}
+              <a href="/privacy" target="_blank">
+                Privacy Policy
+              </a>
             </label>
           </div>
 
@@ -391,7 +424,9 @@ const CheckoutFlow = ({ cartItems, user }) => {
             )}
             <div className="summary-row">
               <span>Shipping:</span>
-              <span>{shippingCost === 0 ? 'FREE' : `£${shippingCost.toFixed(2)}`}</span>
+              <span>
+                {shippingCost === 0 ? "FREE" : `£${shippingCost.toFixed(2)}`}
+              </span>
             </div>
             <div className="summary-row">
               <span>Tax:</span>
@@ -412,7 +447,7 @@ const CheckoutFlow = ({ cartItems, user }) => {
               disabled={loading}
               className="pay-btn"
             >
-              {loading ? 'Processing...' : 'Pay with Stripe'}
+              {loading ? "Processing..." : "Pay with Stripe"}
             </button>
           </div>
         </div>

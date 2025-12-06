@@ -1,9 +1,10 @@
 // components/SignupModal.js
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Modal, Button, Form, Alert, Spinner } from "react-bootstrap";
 import { FaUserPlus, FaEye, FaEyeSlash } from "react-icons/fa";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../context/AuthContext";
 
 function SignupModal({ show, handleClose, showLogin }) {
   const [formData, setFormData] = useState({
@@ -12,16 +13,26 @@ function SignupModal({ show, handleClose, showLogin }) {
     password: "",
     confirmPassword: "",
     phone: "",
+    referralCode: "", // NEW: Referral code field
   });
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const { login } = useContext(AuthContext);
 
   const handleChange = (e) => {
+    let value = e.target.value;
+
+    // Auto-uppercase referral code
+    if (e.target.name === "referralCode") {
+      value = value.toUpperCase();
+    }
+
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value,
+      [e.target.name]: value,
     });
   };
 
@@ -37,46 +48,107 @@ function SignupModal({ show, handleClose, showLogin }) {
       return;
     }
 
+    if (formData.password.length < 6) {
+      setError("Password must be at least 6 characters long");
+      setIsLoading(false);
+      return;
+    }
+
     try {
-      // CORRECTED API ENDPOINT - changed from /api/auth/register to /api/users/register
+      const signupData = {
+        name: formData.name.trim(),
+        email: formData.email.trim().toLowerCase(),
+        password: formData.password,
+      };
+
+      // Add phone only if provided
+      if (formData.phone.trim()) {
+        signupData.phone = formData.phone.trim();
+      }
+
+      // Add referral code only if provided (don't send empty string)
+      if (formData.referralCode.trim()) {
+        signupData.referralCode = formData.referralCode.trim().toUpperCase();
+      }
+
+      console.log("Signup data being sent:", {
+        ...signupData,
+        password: "[HIDDEN]",
+        passwordLength: formData.password.length,
+      });
+
       const response = await axios.post(
-        "http://localhost:5000/api/users/register",
-        {
-          name: formData.name,
-          email: formData.email,
-          password: formData.password,
-          phone: formData.phone,
-        }
+        "https://3-d-backend-3pgu.vercel.app/api/users/signup",
+        signupData
       );
 
-      if (response.data.success) {
-        // Close modal, show success message, and navigate
-        alert("Registration successful! Please login with your credentials.");
-        handleClose();
+      console.log("Signup response:", response.data);
 
-        // Clear form
+      if (response.data.success && response.data.token) {
+        // Backend returned token - user is automatically logged in
+        login(response.data.user, response.data.token, false);
+
+        handleClose();
         setFormData({
           name: "",
           email: "",
           password: "",
           confirmPassword: "",
           phone: "",
+          referralCode: "",
         });
 
-        // Show login modal
-        showLogin();
+        alert(
+          `Welcome, ${response.data.user.name}! Your account has been created and you are now logged in.`
+        );
+        navigate("/");
+      } else if (response.data.success && !response.data.token) {
+        // Backend created user but didn't return token
+        // Show message and redirect to login
+        alert(
+          `Account created successfully! Please log in with your credentials.`
+        );
+        handleClose();
+        setFormData({
+          name: "",
+          email: "",
+          password: "",
+          confirmPassword: "",
+          phone: "",
+          referralCode: "",
+        });
+        showLogin(); // Open login modal
       }
     } catch (err) {
-      setError(
-        err.response?.data?.message || "Registration failed. Please try again."
-      );
+      console.error("Signup error details:", {
+        message: err.message,
+        response: err.response?.data,
+        status: err.response?.status,
+      });
+
+      // More specific error messages
+      let errorMessage = "Registration failed. Please try again.";
+
+      if (err.response?.status === 400) {
+        if (err.response?.data?.message?.includes("already exists")) {
+          errorMessage =
+            "An account with this email already exists. Please login instead.";
+        } else {
+          errorMessage = err.response?.data?.message || errorMessage;
+        }
+      } else if (err.response?.status === 500) {
+        errorMessage =
+          "Server error. Please try again later or contact support.";
+      }
+
+      setError(errorMessage);
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <Modal show={show} onHide={handleClose} centered>
+    <Modal show={show} onHide={handleClose} centered size="lg">
       <Modal.Header closeButton>
         <Modal.Title className="d-flex align-items-center">
           <FaUserPlus className="me-2" /> Create Account
@@ -136,7 +208,7 @@ function SignupModal({ show, handleClose, showLogin }) {
               <Button
                 variant="outline-secondary"
                 className="position-absolute end-0 top-0"
-                style={{ border: "none" }}
+                style={{ border: "none", cursor: "pointer" }}
                 onClick={() => setShowPassword(!showPassword)}
                 type="button"
               >
@@ -147,14 +219,49 @@ function SignupModal({ show, handleClose, showLogin }) {
 
           <Form.Group className="mb-3">
             <Form.Label>Confirm Password *</Form.Label>
+            <div className="position-relative">
+              <Form.Control
+                type={showConfirmPassword ? "text" : "password"}
+                name="confirmPassword"
+                placeholder="Confirm your password"
+                value={formData.confirmPassword}
+                onChange={handleChange}
+                required
+              />
+              <Button
+                variant="outline-secondary"
+                className="position-absolute end-0 top-0"
+                style={{ border: "none", cursor: "pointer" }}
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                type="button"
+              >
+                {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
+              </Button>
+            </div>
+          </Form.Group>
+
+          {/* NEW: Referral Code Input Field */}
+          <Form.Group className="mb-3">
+            <Form.Label>
+              Referral Code{" "}
+              <span style={{ color: "#999", fontSize: "0.85rem" }}>
+                (Optional)
+              </span>
+            </Form.Label>
             <Form.Control
-              type="password"
-              name="confirmPassword"
-              placeholder="Confirm your password"
-              value={formData.confirmPassword}
+              type="text"
+              name="referralCode"
+              placeholder="e.g., REFABC123"
+              value={formData.referralCode}
               onChange={handleChange}
-              required
+              style={{
+                textTransform: "uppercase",
+              }}
             />
+            <Form.Text className="text-muted d-block mt-2">
+              💡 Have a friend on our platform? Enter their referral code here
+              to unlock rewards!
+            </Form.Text>
           </Form.Group>
         </Modal.Body>
         <Modal.Footer className="d-flex flex-column">
@@ -165,7 +272,10 @@ function SignupModal({ show, handleClose, showLogin }) {
             style={{ backgroundColor: "#514F6E", border: "none" }}
           >
             {isLoading ? (
-              <Spinner animation="border" size="sm" />
+              <>
+                <Spinner animation="border" size="sm" className="me-2" />
+                Creating Account...
+              </>
             ) : (
               "Create Account"
             )}

@@ -1,0 +1,228 @@
+import React, { useState } from "react";
+import axios from "axios";
+import Navbar from "../components/navbar";
+import Footer from "../components/footer";
+
+function FeedbackPage() {
+  const [message, setMessage] = useState("");
+  const [rating, setRating] = useState(5);
+  const [email, setEmail] = useState(() => {
+    try {
+      const u = JSON.parse(localStorage.getItem("userData") || "{}");
+      return u?.email || "";
+    } catch {
+      return "";
+    }
+  });
+  const [sending, setSending] = useState(false);
+  const [error, setError] = useState("");
+  const [submitted, setSubmitted] = useState(false);
+
+  const submit = async (e) => {
+    e.preventDefault();
+    const token = localStorage.getItem("userToken");
+    if (!token) {
+      setError("You must be logged in to submit feedback.");
+      return;
+    }
+    try {
+      setSending(true);
+      setError("");
+      await axios.post(
+        "https://3-d-backend-3pgu.vercel.app/api/feedback",
+        { message, rating, email },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      setSubmitted(true);
+      setMessage("");
+      setRating(5);
+    } catch (err) {
+      setError("Failed to submit feedback. Please try again.");
+    } finally {
+      setSending(false);
+    }
+  };
+
+  return (
+    <>
+      <Navbar />
+      <main
+        style={{ paddingTop: 140, background: "#0b0b10", minHeight: "100vh" }}
+      >
+        <section
+          style={{
+            background:
+              "radial-gradient(1000px 600px at 20% -10%, rgba(156,152,212,0.25), transparent 60%), radial-gradient(900px 500px at 100% -20%, rgba(81,79,110,0.35), transparent 60%)",
+            color: "white",
+          }}
+        >
+          <div
+            style={{
+              maxWidth: 1200,
+              margin: "0 auto",
+              padding: "80px 20px 40px",
+            }}
+          >
+            <h1
+              style={{
+                fontFamily: "Staatliches, sans-serif",
+                fontSize: 64,
+                lineHeight: 1.05,
+                margin: 0,
+                letterSpacing: 1,
+              }}
+            >
+              Feedback
+            </h1>
+            <p
+              style={{
+                color: "#cfd0d3",
+                fontSize: 18,
+                maxWidth: 680,
+                marginTop: 14,
+              }}
+            >
+              Share your experience with us. Your feedback helps us get better.
+            </p>
+          </div>
+        </section>
+
+        <section
+          style={{ maxWidth: 800, margin: "0 auto", padding: "20px 20px 80px" }}
+        >
+          <div
+            style={{
+              background: "rgba(255,255,255,0.04)",
+              border: "1px solid rgba(255,255,255,0.08)",
+              borderRadius: 16,
+              padding: 24,
+              color: "white",
+              backdropFilter: "blur(8px)",
+            }}
+          >
+            {submitted && (
+              <div
+                style={{
+                  background: "rgba(76,175,80,0.15)",
+                  border: "1px solid rgba(76,175,80,0.35)",
+                  color: "#b9ebc0",
+                  padding: 12,
+                  borderRadius: 10,
+                  marginBottom: 16,
+                }}
+              >
+                Thanks for your feedback!
+              </div>
+            )}
+            {!!error && (
+              <div
+                style={{
+                  background: "rgba(255, 99, 71, 0.15)",
+                  border: "1px solid rgba(255, 99, 71, 0.35)",
+                  color: "#ffb3b3",
+                  padding: 12,
+                  borderRadius: 10,
+                  marginBottom: 16,
+                }}
+              >
+                {error}
+              </div>
+            )}
+
+            <form onSubmit={submit}>
+              <div style={{ marginBottom: 14 }}>
+                <label style={{ color: "#cfd0d3", fontSize: 13 }}>Email</label>
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="your@email.com"
+                  required
+                  style={{
+                    width: "100%",
+                    background: "rgba(255,255,255,0.06)",
+                    border: "1px solid rgba(255,255,255,0.15)",
+                    color: "white",
+                    borderRadius: 10,
+                    padding: "12px 14px",
+                    marginTop: 6,
+                    outline: "none",
+                  }}
+                />
+              </div>
+              <div style={{ marginBottom: 14 }}>
+                <label style={{ color: "#cfd0d3", fontSize: 13 }}>
+                  Your feedback
+                </label>
+                <textarea
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  placeholder="Tell us what you loved and what we can improve."
+                  rows={6}
+                  required
+                  style={{
+                    width: "100%",
+                    background: "rgba(255,255,255,0.06)",
+                    border: "1px solid rgba(255,255,255,0.15)",
+                    color: "white",
+                    borderRadius: 10,
+                    padding: "12px 14px",
+                    marginTop: 6,
+                    outline: "none",
+                    resize: "vertical",
+                  }}
+                />
+              </div>
+
+              <div style={{ marginBottom: 18 }}>
+                <label style={{ color: "#cfd0d3", fontSize: 13 }}>Rating</label>
+                <select
+                  value={rating}
+                  onChange={(e) => setRating(Number(e.target.value))}
+                  style={{
+                    width: 160,
+                    background: "rgba(255,255,255,0.06)",
+                    border: "1px solid rgba(255,255,255,0.15)",
+                    color: "white",
+                    borderRadius: 10,
+                    padding: "10px 12px",
+                    marginTop: 6,
+                    outline: "none",
+                  }}
+                >
+                  {[5, 4, 3, 2, 1].map((r) => (
+                    <option
+                      key={r}
+                      value={r}
+                      style={{ color: "black" }}
+                    >{`${r} Star${r > 1 ? "s" : ""}`}</option>
+                  ))}
+                </select>
+              </div>
+
+              <button
+                type="submit"
+                disabled={sending}
+                style={{
+                  background:
+                    "linear-gradient(90deg, #514F6E 0%, #9C98D4 100%)",
+                  color: "white",
+                  border: "none",
+                  padding: "12px 22px",
+                  borderRadius: 12,
+                  fontWeight: 700,
+                  cursor: "pointer",
+                }}
+              >
+                {sending ? "Submitting..." : "Submit feedback"}
+              </button>
+            </form>
+          </div>
+        </section>
+      </main>
+      <Footer />
+    </>
+  );
+}
+
+export default FeedbackPage;

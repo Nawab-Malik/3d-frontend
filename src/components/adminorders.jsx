@@ -32,7 +32,7 @@ const AdminOrders = () => {
       setLoading(true);
       const token = "admin123";
       const response = await axios.get(
-        `http://localhost:5000/api/admin/orders?page=${currentPage}&limit=10&status=${filters.status}&search=${filters.search}`,
+        `https://3-d-backend-3pgu.vercel.app/api/admin/orders?page=${currentPage}&limit=10&status=${filters.status}&search=${filters.search}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -52,7 +52,7 @@ const AdminOrders = () => {
     try {
       const token = "admin123";
       await axios.put(
-        `http://localhost:5000/api/admin/orders/${orderId}/status`,
+        `https://3-d-backend-3pgu.vercel.app/api/admin/orders/${orderId}/status`,
         { status: newStatus },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -71,9 +71,12 @@ const AdminOrders = () => {
 
     try {
       const token = "admin123";
-      await axios.delete(`http://localhost:5000/api/admin/orders/${orderId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      await axios.delete(
+        `https://3-d-backend-3pgu.vercel.app/api/admin/orders/${orderId}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
 
       alert("Order deleted successfully");
       fetchOrders(); // Refresh orders
@@ -352,13 +355,13 @@ const AdminOrders = () => {
                   <div className="col-md-6">
                     <h6>Order Summary</h6>
                     <p>
-                      <strong>Subtotal:</strong> ${selectedOrder.subtotal}
+                      <strong>Subtotal:</strong> £{selectedOrder.subtotal}
                       <br />
-                      <strong>Discount:</strong> ${selectedOrder.discount || 0}
+                      <strong>Discount:</strong> £{selectedOrder.discount || 0}
                       <br />
-                      <strong>Tax:</strong> ${selectedOrder.tax || 0}
+                      <strong>Tax:</strong> £{selectedOrder.tax || 0}
                       <br />
-                      <strong>Grand Total:</strong> ${selectedOrder.grandTotal}
+                      <strong>Grand Total:</strong> £{selectedOrder.grandTotal}
                     </p>
                   </div>
                 </div>

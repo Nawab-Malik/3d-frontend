@@ -10,7 +10,7 @@ const TestConnection = () => {
     setLoading(true);
     try {
       const response = await axios.get(
-        "http://localhost:5000/api/test/test-login"
+        "https://3-d-backend-3pgu.vercel.app/api/test/test-login"
       );
       setTestResult(JSON.stringify(response.data, null, 2));
     } catch (error) {
@@ -30,7 +30,7 @@ const TestConnection = () => {
     setLoading(true);
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/users/login",
+        "https://3-d-backend-3pgu.vercel.app/api/users/login",
         {
           email: "admin@3dprints.com",
           password: "your_admin_password", // You need to enter the actual password here

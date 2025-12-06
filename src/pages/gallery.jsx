@@ -42,7 +42,9 @@ function GalleryPage() {
     const fetchImages = async () => {
       try {
         setLoading(true);
-        const res = await axios.get("http://localhost:5000/api/gallery");
+        const res = await axios.get(
+          "https://3-d-backend-3pgu.vercel.app/api/gallery"
+        );
         setImages(res.data || []);
       } catch (err) {
         setError("Failed to load gallery. Please try again.");
@@ -56,7 +58,9 @@ function GalleryPage() {
   return (
     <>
       <Navbar />
-      <main style={{ paddingTop: 140, background: "#ffffff", minHeight: "100vh" }}>
+      <main
+        style={{ paddingTop: 140, background: "#ffffff", minHeight: "100vh" }}
+      >
         <section
           style={{
             background:
@@ -64,7 +68,13 @@ function GalleryPage() {
             color: "#111",
           }}
         >
-          <div style={{ maxWidth: 1200, margin: "0 auto", padding: "80px 20px 40px" }}>
+          <div
+            style={{
+              maxWidth: 1200,
+              margin: "0 auto",
+              padding: "80px 20px 40px",
+            }}
+          >
             <h1
               className="reveal-on-scroll"
               style={{
@@ -77,18 +87,38 @@ function GalleryPage() {
             >
               Gallery
             </h1>
-            <p className="reveal-on-scroll" style={{ color: "#4a4a4a", fontSize: 18, maxWidth: 680, marginTop: 14 }}>
-              A curated showcase of our product images. Pure visuals, no distractions.
+            <p
+              className="reveal-on-scroll"
+              style={{
+                color: "#4a4a4a",
+                fontSize: 18,
+                maxWidth: 680,
+                marginTop: 14,
+              }}
+            >
+              A curated showcase of our product images. Pure visuals, no
+              distractions.
             </p>
           </div>
         </section>
 
-        <section ref={containerRef} style={{ maxWidth: 1200, margin: "0 auto", padding: "20px 20px 80px" }}>
+        <section
+          ref={containerRef}
+          style={{
+            maxWidth: 1200,
+            margin: "0 auto",
+            padding: "20px 20px 80px",
+          }}
+        >
           {loading && (
-            <div className="reveal-on-scroll" style={{ color: "#6b6b6b" }}>Loading...</div>
+            <div className="reveal-on-scroll" style={{ color: "#6b6b6b" }}>
+              Loading...
+            </div>
           )}
           {!!error && (
-            <div className="reveal-on-scroll" style={{ color: "#b00020" }}>{error}</div>
+            <div className="reveal-on-scroll" style={{ color: "#b00020" }}>
+              {error}
+            </div>
           )}
 
           {!loading && !error && (
@@ -101,21 +131,34 @@ function GalleryPage() {
               }}
             >
               {images.length === 0 && (
-                <div className="reveal-on-scroll" style={{ color: "#6b6b6b" }}>No images yet.</div>
+                <div className="reveal-on-scroll" style={{ color: "#6b6b6b" }}>
+                  No images yet.
+                </div>
               )}
               {images.map((img) => (
-                <div key={img._id} className="reveal-on-scroll tilt sr-zoom mask-reveal" style={{
-                  background: "#ffffff",
-                  border: "1px solid #eaeaea",
-                  borderRadius: 12,
-                  overflow: "hidden",
-                  boxShadow: "0 8px 24px rgba(0,0,0,0.06)",
-                }}>
+                <div
+                  key={img._id}
+                  className="reveal-on-scroll tilt sr-zoom mask-reveal"
+                  style={{
+                    background: "#ffffff",
+                    border: "1px solid #eaeaea",
+                    borderRadius: 12,
+                    overflow: "hidden",
+                    boxShadow: "0 8px 24px rgba(0,0,0,0.06)",
+                  }}
+                >
                   <img
-                    src={`http://localhost:5000${img.imageUrl}`}
+                    src={`https://3-d-backend-3pgu.vercel.app${img.imageUrl}`}
                     alt="Gallery"
-                    style={{ width: "100%", display: "block", aspectRatio: "1/1", objectFit: "cover" }}
-                    onError={(e) => { e.currentTarget.style.opacity = 0.2; }}
+                    style={{
+                      width: "100%",
+                      display: "block",
+                      aspectRatio: "1/1",
+                      objectFit: "cover",
+                    }}
+                    onError={(e) => {
+                      e.currentTarget.style.opacity = 0.2;
+                    }}
                   />
                 </div>
               ))}

@@ -1,22 +1,35 @@
 // components/ProtectedRoute.js
-import React from 'react';
-import { Navigate } from 'react-router-dom';
+import React, { useContext } from "react";
+import { Navigate } from "react-router-dom";
+import { AuthContext } from "../context/AuthContext";
 
+/**
+ * ProtectedRoute Component
+ * Protects routes that require user authentication
+ */
 const ProtectedRoute = ({ children, requireAdmin = false }) => {
-  // Get user data from localStorage
-  const userData = JSON.parse(localStorage.getItem('userData') || '{}');
-  const token = localStorage.getItem('userToken');
+  const { isAuthenticated, isAdmin, loading } = useContext(AuthContext);
 
-  // Check if user is authenticated
-  if (!token) {
-    return <Navigate to={requireAdmin ? "/admin" : "/"} replace />;
+  // Show loading state
+  if (loading) {
+    return (
+      <div style={{ textAlign: "center", padding: "60px 20px" }}>
+        Loading...
+      </div>
+    );
   }
 
-  // If admin access is required, check if user is admin
-  if (requireAdmin && userData.role !== 'admin') {
+  // Check if user is authenticated
+  if (!isAuthenticated) {
     return <Navigate to="/" replace />;
   }
 
+  // Check if admin access is required
+  if (requireAdmin && !isAdmin) {
+    return <Navigate to="/" replace />;
+  }
+
+  // User is authenticated, render the component
   return children;
 };
 

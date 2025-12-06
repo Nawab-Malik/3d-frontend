@@ -17,15 +17,22 @@ function ForgotPasswordModal({ show, handleClose, presetEmail = "" }) {
     setDevResetUrl("");
 
     try {
-      const res = await axios.post("http://localhost:5000/api/users/forgot-password", {
-        email,
-      });
-      setMessage(res.data?.message || "If an account exists, a reset link has been sent.");
+      const res = await axios.post(
+        "https://3-d-backend-3pgu.vercel.app/api/users/forgot-password",
+        {
+          email,
+        }
+      );
+      setMessage(
+        res.data?.message || "If an account exists, a reset link has been sent."
+      );
       if (res.data?.resetUrl) {
         setDevResetUrl(res.data.resetUrl);
       }
     } catch (err) {
-      setError(err.response?.data?.message || "Something went wrong. Please try again.");
+      setError(
+        err.response?.data?.message || "Something went wrong. Please try again."
+      );
     } finally {
       setIsLoading(false);
     }
@@ -60,8 +67,16 @@ function ForgotPasswordModal({ show, handleClose, presetEmail = "" }) {
           <Button variant="secondary" onClick={handleClose}>
             Close
           </Button>
-          <Button type="submit" style={{ backgroundColor: "#514F6E", border: "none" }} disabled={isLoading}>
-            {isLoading ? <Spinner animation="border" size="sm" /> : "Send Reset Link"}
+          <Button
+            type="submit"
+            style={{ backgroundColor: "#514F6E", border: "none" }}
+            disabled={isLoading}
+          >
+            {isLoading ? (
+              <Spinner animation="border" size="sm" />
+            ) : (
+              "Send Reset Link"
+            )}
           </Button>
         </Modal.Footer>
       </Form>

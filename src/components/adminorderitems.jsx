@@ -14,7 +14,7 @@ function AdminOrderItems() {
       setError("");
       const token = "admin123"; // matches backend admin auth in routes/adminorders.js
       const res = await axios.get(
-        `http://localhost:5000/api/admin/orders?page=1&limit=100&status=${filters.status}&search=${filters.search}`,
+        `https://3-d-backend-3pgu.vercel.app/api/admin/orders?page=1&limit=100&status=${filters.status}&search=${filters.search}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
       setOrders(res.data?.orders || []);
@@ -78,7 +78,9 @@ function AdminOrderItems() {
           <select
             className="form-select"
             value={filters.status}
-            onChange={(e) => setFilters((p) => ({ ...p, status: e.target.value }))}
+            onChange={(e) =>
+              setFilters((p) => ({ ...p, status: e.target.value }))
+            }
           >
             <option value="all">All Statuses</option>
             <option value="pending">Pending</option>
@@ -96,11 +98,17 @@ function AdminOrderItems() {
             className="form-control"
             placeholder="Search by product, order no, or customer"
             value={filters.search}
-            onChange={(e) => setFilters((p) => ({ ...p, search: e.target.value }))}
+            onChange={(e) =>
+              setFilters((p) => ({ ...p, search: e.target.value }))
+            }
           />
         </div>
         <div className="col-md-2">
-          <button className="btn btn-secondary w-100" onClick={fetchOrders} disabled={loading}>
+          <button
+            className="btn btn-secondary w-100"
+            onClick={fetchOrders}
+            disabled={loading}
+          >
             {loading ? "Loading..." : "Refresh"}
           </button>
         </div>
@@ -137,14 +145,24 @@ function AdminOrderItems() {
                       <img
                         src={it.product.imageUrl}
                         alt={it.product.title}
-                        style={{ width: 40, height: 40, objectFit: "cover", borderRadius: 6, marginLeft: 8 }}
-                        onError={(e) => { e.currentTarget.style.display = "none"; }}
+                        style={{
+                          width: 40,
+                          height: 40,
+                          objectFit: "cover",
+                          borderRadius: 6,
+                          marginLeft: 8,
+                        }}
+                        onError={(e) => {
+                          e.currentTarget.style.display = "none";
+                        }}
                       />
                     )}
                   </td>
                   <td>${it.price}</td>
                   <td>{it.quantity}</td>
-                  <td><strong>${it.total}</strong></td>
+                  <td>
+                    <strong>${it.total}</strong>
+                  </td>
                   <td>
                     {it.customer.name}
                     <br />
@@ -154,7 +172,9 @@ function AdminOrderItems() {
                   <td>
                     {new Date(it.createdAt).toLocaleDateString()}
                     <br />
-                    <small className="text-muted">{new Date(it.createdAt).toLocaleTimeString()}</small>
+                    <small className="text-muted">
+                      {new Date(it.createdAt).toLocaleTimeString()}
+                    </small>
                   </td>
                 </tr>
               ))}

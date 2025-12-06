@@ -27,15 +27,18 @@ function AdminPanel({ onLogout }) {
     try {
       setIsLoading(true);
       const response = await axios.get(
-        "http://localhost:5000/api/admin/products",
+        "https://3-d-backend-3pgu.vercel.app/api/admin/products",
         {
           headers: {
             Authorization: "Bearer admin123",
           },
         }
       );
-      console.log('Admin: Fetched products:', response.data);
-      console.log('Admin: Products with variations:', response.data.filter(p => p.hasVariations));
+      console.log("Admin: Fetched products:", response.data);
+      console.log(
+        "Admin: Products with variations:",
+        response.data.filter((p) => p.hasVariations)
+      );
       setProducts(response.data);
     } catch (error) {
       console.error("Error fetching products:", error);
@@ -51,7 +54,7 @@ function AdminPanel({ onLogout }) {
     try {
       setOrdersLoading(true);
       const response = await axios.get(
-        "http://localhost:5000/api/admin/orders",
+        "https://3-d-backend-3pgu.vercel.app/api/admin/orders",
         {
           headers: {
             Authorization: "Bearer admin123",
@@ -75,11 +78,14 @@ function AdminPanel({ onLogout }) {
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this product?")) {
       try {
-        await axios.delete(`http://localhost:5000/api/admin/products/${id}`, {
-          headers: {
-            Authorization: "Bearer admin123",
-          },
-        });
+        await axios.delete(
+          `https://3-d-backend-3pgu.vercel.app/api/admin/products/${id}`,
+          {
+            headers: {
+              Authorization: "Bearer admin123",
+            },
+          }
+        );
         fetchProducts(); // Refresh the list
       } catch (error) {
         console.error("Error deleting product:", error);
@@ -97,7 +103,7 @@ function AdminPanel({ onLogout }) {
   const updateOrderStatus = async (orderId, newStatus) => {
     try {
       await axios.put(
-        `http://localhost:5000/api/admin/orders/${orderId}/status`,
+        `https://3-d-backend-3pgu.vercel.app/api/admin/orders/${orderId}/status`,
         { status: newStatus },
         {
           headers: {
@@ -164,7 +170,7 @@ function AdminPanel({ onLogout }) {
                   <tr key={product._id}>
                     <td>
                       <img
-                        src={`http://localhost:5000${product.imageUrl}`}
+                        src={`https://3-d-backend-3pgu.vercel.app${product.imageUrl}`}
                         alt={product.title}
                         className="img-thumbnail"
                         style={{
@@ -174,22 +180,26 @@ function AdminPanel({ onLogout }) {
                         }}
                         onError={(e) => {
                           e.target.src =
-                            "http://localhost:5000/uploads/default-product.png";
+                            "https://3-d-backend-3pgu.vercel.app/uploads/default-product.png";
                         }}
                       />
                     </td>
                     <td className="align-middle">{product.title}</td>
-                    <td className="align-middle">${product.price}</td>
+                    <td className="align-middle">£{product.price}</td>
                     <td className="align-middle">
                       {product.categories.join(", ")}
                     </td>
                     <td className="align-middle">
-                      {product.hasVariations && product.variations?.length > 0 ? (
+                      {product.hasVariations &&
+                      product.variations?.length > 0 ? (
                         <span className="badge bg-primary">
-                          {product.variations.length} variation{product.variations.length !== 1 ? 's' : ''}
+                          {product.variations.length} variation
+                          {product.variations.length !== 1 ? "s" : ""}
                         </span>
                       ) : (
-                        <span className="badge bg-secondary">No variations</span>
+                        <span className="badge bg-secondary">
+                          No variations
+                        </span>
                       )}
                     </td>
                     <td className="align-middle">
@@ -333,10 +343,7 @@ function AdminPanel({ onLogout }) {
   };
 
   return (
-    <div
-      className="flex-grow-1 p-3 overflow-auto"
-      style={{ marginLeft: "0" }}
-    >
+    <div className="flex-grow-1 p-3 overflow-auto" style={{ marginLeft: "0" }}>
       <div className="container-fluid">{renderProductsManagement()}</div>
     </div>
   );

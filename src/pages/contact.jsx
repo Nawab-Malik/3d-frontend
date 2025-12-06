@@ -17,7 +17,12 @@ function ContactPage() {
     try {
       setSending(true);
       setError("");
-      await axios.post("http://localhost:5000/api/contact", { name, email, phone, message });
+      await axios.post("https://3-d-backend-3pgu.vercel.app/api/contact", {
+        name,
+        email,
+        phone,
+        message,
+      });
       setSubmitted(true);
       setName("");
       setEmail("");
@@ -41,7 +46,13 @@ function ContactPage() {
             color: "white",
           }}
         >
-          <div style={{ maxWidth: 1200, margin: "0 auto", padding: "80px 20px 40px" }}>
+          <div
+            style={{
+              maxWidth: 1200,
+              margin: "0 auto",
+              padding: "80px 20px 40px",
+            }}
+          >
             <h1
               style={{
                 fontFamily: "Staatliches, sans-serif",
@@ -53,15 +64,34 @@ function ContactPage() {
             >
               Let's make it 3D.
             </h1>
-            <p style={{ color: "#cfd0d3", fontSize: 18, maxWidth: 680, marginTop: 14 }}>
-              Tell us about your idea, and we'll craft a tailored solution with premium materials, meticulous
-              finishing and white‑glove delivery.
+            <p
+              style={{
+                color: "#cfd0d3",
+                fontSize: 18,
+                maxWidth: 680,
+                marginTop: 14,
+              }}
+            >
+              Tell us about your idea, and we'll craft a tailored solution with
+              premium materials, meticulous finishing and white‑glove delivery.
             </p>
           </div>
         </section>
 
-        <section style={{ maxWidth: 1200, margin: "0 auto", padding: "20px 20px 80px" }}>
-          <div style={{ display: "grid", gridTemplateColumns: "1.2fr 0.8fr", gap: 24 }}>
+        <section
+          style={{
+            maxWidth: 1200,
+            margin: "0 auto",
+            padding: "20px 20px 80px",
+          }}
+        >
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "1.2fr 0.8fr",
+              gap: 24,
+            }}
+          >
             <div
               style={{
                 background: "rgba(255,255,255,0.04)",
@@ -82,7 +112,8 @@ function ContactPage() {
                     marginBottom: 16,
                   }}
                 >
-                  Thanks! Your message has been sent. We'll get back to you shortly.
+                  Thanks! Your message has been sent. We'll get back to you
+                  shortly.
                 </div>
               )}
               {!!error && (
@@ -99,11 +130,21 @@ function ContactPage() {
                   {error}
                 </div>
               )}
-              <h3 style={{ color: "white", marginTop: 0, marginBottom: 12 }}>Send us a message</h3>
+              <h3 style={{ color: "white", marginTop: 0, marginBottom: 12 }}>
+                Send us a message
+              </h3>
               <form onSubmit={submit}>
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "1fr 1fr",
+                    gap: 14,
+                  }}
+                >
                   <div>
-                    <label style={{ color: "#cfd0d3", fontSize: 13 }}>Full name</label>
+                    <label style={{ color: "#cfd0d3", fontSize: 13 }}>
+                      Full name
+                    </label>
                     <input
                       value={name}
                       onChange={(e) => setName(e.target.value)}
@@ -122,7 +163,9 @@ function ContactPage() {
                     />
                   </div>
                   <div>
-                    <label style={{ color: "#cfd0d3", fontSize: 13 }}>Email</label>
+                    <label style={{ color: "#cfd0d3", fontSize: 13 }}>
+                      Email
+                    </label>
                     <input
                       type="email"
                       value={email}
@@ -142,7 +185,9 @@ function ContactPage() {
                     />
                   </div>
                   <div>
-                    <label style={{ color: "#cfd0d3", fontSize: 13 }}>Phone</label>
+                    <label style={{ color: "#cfd0d3", fontSize: 13 }}>
+                      Phone
+                    </label>
                     <input
                       value={phone}
                       onChange={(e) => setPhone(e.target.value)}
@@ -161,7 +206,9 @@ function ContactPage() {
                   </div>
                 </div>
                 <div style={{ marginTop: 14 }}>
-                  <label style={{ color: "#cfd0d3", fontSize: 13 }}>Project details</label>
+                  <label style={{ color: "#cfd0d3", fontSize: 13 }}>
+                    Project details
+                  </label>
                   <textarea
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
@@ -181,12 +228,20 @@ function ContactPage() {
                     }}
                   />
                 </div>
-                <div style={{ marginTop: 18, display: "flex", gap: 12, alignItems: "center" }}>
+                <div
+                  style={{
+                    marginTop: 18,
+                    display: "flex",
+                    gap: 12,
+                    alignItems: "center",
+                  }}
+                >
                   <button
                     type="submit"
                     disabled={sending}
                     style={{
-                      background: "linear-gradient(90deg, #514F6E 0%, #9C98D4 100%)",
+                      background:
+                        "linear-gradient(90deg, #514F6E 0%, #9C98D4 100%)",
                       color: "white",
                       border: "none",
                       padding: "12px 22px",
@@ -197,7 +252,9 @@ function ContactPage() {
                   >
                     {sending ? "Sending..." : "Send message"}
                   </button>
-                  <span style={{ color: "#a7a8ad", fontSize: 13 }}>Average response time: under 2 hours</span>
+                  <span style={{ color: "#a7a8ad", fontSize: 13 }}>
+                    Average response time: under 2 hours
+                  </span>
                 </div>
               </form>
             </div>
@@ -205,14 +262,17 @@ function ContactPage() {
             <aside style={{ display: "grid", gap: 16 }}>
               <div
                 style={{
-                  background: "linear-gradient(180deg, rgba(81,79,110,0.15), rgba(156,152,212,0.15))",
+                  background:
+                    "linear-gradient(180deg, rgba(81,79,110,0.15), rgba(156,152,212,0.15))",
                   border: "1px solid rgba(255,255,255,0.1)",
                   borderRadius: 16,
                   color: "white",
                   padding: 20,
                 }}
               >
-                <h4 style={{ marginTop: 0, marginBottom: 10 }}>Contact details</h4>
+                <h4 style={{ marginTop: 0, marginBottom: 10 }}>
+                  Contact details
+                </h4>
                 <div style={{ color: "#cfd0d3", lineHeight: 1.8 }}>
                   <div>Email: hello@makeit3d.example</div>
                   <div>Phone: (+1) 555‑123‑4567</div>
@@ -230,8 +290,24 @@ function ContactPage() {
                   minHeight: 260,
                 }}
               >
-                <div style={{ padding: 16, borderBottom: "1px solid rgba(255,255,255,0.08)" }}>Our studio</div>
-                <div style={{ height: 220, background: "#11131a", display: "flex", alignItems: "center", justifyContent: "center", color: "#697085" }}>
+                <div
+                  style={{
+                    padding: 16,
+                    borderBottom: "1px solid rgba(255,255,255,0.08)",
+                  }}
+                >
+                  Our studio
+                </div>
+                <div
+                  style={{
+                    height: 220,
+                    background: "#11131a",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    color: "#697085",
+                  }}
+                >
                   Map placeholder
                 </div>
               </div>

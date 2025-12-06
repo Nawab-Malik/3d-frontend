@@ -10,7 +10,9 @@ const Cart = () => {
 
   const fetchCart = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/cart");
+      const res = await axios.get(
+        "https://3-d-backend-3pgu.vercel.app/api/cart"
+      );
       setCartItems(res.data.items || []);
     } catch (error) {
       console.error("Failed to fetch cart", error);
@@ -23,7 +25,9 @@ const Cart = () => {
 
   const handleRemove = async (productId) => {
     try {
-      await axios.delete(`http://localhost:5000/api/cart/${productId}`);
+      await axios.delete(
+        `https://3-d-backend-3pgu.vercel.app/api/cart/${productId}`
+      );
       fetchCart();
     } catch (error) {
       console.error("Failed to remove item", error);
@@ -197,7 +201,7 @@ const Cart = () => {
                       gap: "10px",
                     }}
                   >
-                    <span>${product.price}</span>
+                    <span>£{product.price}</span>
                     <span
                       style={{
                         color: "#999999",

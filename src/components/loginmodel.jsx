@@ -1,9 +1,10 @@
 // components/LoginModal.js
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Modal, Button, Form, Alert, Spinner } from "react-bootstrap";
 import { FaEye, FaEyeSlash, FaSignInAlt } from "react-icons/fa";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../context/AuthContext";
 import ForgotPasswordModal from "./forgotpasswordmodal";
 
 function LoginModal({ show, handleClose, handleLoginSuccess, showSignup }) {
@@ -13,6 +14,7 @@ function LoginModal({ show, handleClose, handleLoginSuccess, showSignup }) {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const { login } = useContext(AuthContext);
   const [showForgot, setShowForgot] = useState(false);
 
   const handleSubmit = async (e) => {
@@ -21,24 +23,31 @@ function LoginModal({ show, handleClose, handleLoginSuccess, showSignup }) {
     setError("");
 
     try {
-      // CORRECTED API ENDPOINT - changed from /api/auth/login to /api/users/login
+      const loginData = {
+        email: email.trim().toLowerCase(),
+        password,
+      };
+
+      console.log("Login attempt with email:", loginData.email);
+
       const response = await axios.post(
-        "http://localhost:5000/api/users/login",
-        {
-          email,
-          password,
-        }
+        "https://3-d-backend-3pgu.vercel.app/api/users/login",
+        loginData
       );
+
+      console.log("Login response:", response.data);
 
       if (response.data.success) {
         if (response.data.user?.role === "admin") {
-          setError("Admin accounts cannot log in here. Please use the Admin portal at /admin.");
+          setError(
+            "Admin accounts cannot log in here. Please use the Admin portal at /admin-login."
+          );
           setIsLoading(false);
           return;
         }
-        // Store token and user data
-        localStorage.setItem("userToken", response.data.token);
-        localStorage.setItem("userData", JSON.stringify(response.data.user));
+
+        // Use AuthContext to store login state
+        login(response.data.user, response.data.token, false);
 
         // Call the success handler
         handleLoginSuccess(response.data.user);
@@ -51,10 +60,15 @@ function LoginModal({ show, handleClose, handleLoginSuccess, showSignup }) {
         // Show success message
         alert(`Welcome back, ${response.data.user.name}!`);
 
-        // Navigate to home page or dashboard
+        // Navigate to home page
         navigate("/");
       }
     } catch (err) {
+      console.error("Login error details:", {
+        message: err.message,
+        response: err.response?.data,
+        status: err.response?.status,
+      });
       setError(
         err.response?.data?.message || "Login failed. Please try again."
       );

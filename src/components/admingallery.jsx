@@ -10,9 +10,12 @@ function AdminGallery() {
 
   const fetchImages = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/admin/gallery", {
-        headers: { Authorization: "Bearer admin123" },
-      });
+      const res = await axios.get(
+        "https://3-d-backend-3pgu.vercel.app/api/admin/gallery",
+        {
+          headers: { Authorization: "Bearer admin123" },
+        }
+      );
       setImages(res.data || []);
     } catch (err) {
       alert("Failed to load images");
@@ -31,9 +34,13 @@ function AdminGallery() {
     if (title) form.append("title", title);
     try {
       setLoading(true);
-      await axios.post("http://localhost:5000/api/admin/gallery", form, {
-        headers: { Authorization: "Bearer admin123" },
-      });
+      await axios.post(
+        "https://3-d-backend-3pgu.vercel.app/api/admin/gallery",
+        form,
+        {
+          headers: { Authorization: "Bearer admin123" },
+        }
+      );
       setFile(null);
       setTitle("");
       await fetchImages();
@@ -47,9 +54,12 @@ function AdminGallery() {
   const onDelete = async (id) => {
     if (!window.confirm("Delete this image?")) return;
     try {
-      await axios.delete(`http://localhost:5000/api/admin/gallery/${id}`, {
-        headers: { Authorization: "Bearer admin123" },
-      });
+      await axios.delete(
+        `https://3-d-backend-3pgu.vercel.app/api/admin/gallery/${id}`,
+        {
+          headers: { Authorization: "Bearer admin123" },
+        }
+      );
       await fetchImages();
     } catch (err) {
       alert("Delete failed");
@@ -63,13 +73,18 @@ function AdminGallery() {
   const onSave = async (img) => {
     const form = new FormData();
     const current = edits[img._id] || {};
-    if (typeof current.title !== "undefined") form.append("title", current.title);
+    if (typeof current.title !== "undefined")
+      form.append("title", current.title);
     if (current.file) form.append("image", current.file);
     if (![...form.keys()].length) return; // nothing to update
     try {
-      await axios.put(`http://localhost:5000/api/admin/gallery/${img._id}`, form, {
-        headers: { Authorization: "Bearer admin123" },
-      });
+      await axios.put(
+        `https://3-d-backend-3pgu.vercel.app/api/admin/gallery/${img._id}`,
+        form,
+        {
+          headers: { Authorization: "Bearer admin123" },
+        }
+      );
       setEdits((prev) => ({ ...prev, [img._id]: {} }));
       await fetchImages();
     } catch (err) {
@@ -96,7 +111,11 @@ function AdminGallery() {
             onChange={(e) => setFile(e.target.files?.[0] || null)}
             className="form-control"
           />
-          <button disabled={!file || loading} className="btn btn-primary" type="submit">
+          <button
+            disabled={!file || loading}
+            className="btn btn-primary"
+            type="submit"
+          >
             {loading ? "Uploading..." : "Upload"}
           </button>
         </form>
@@ -107,11 +126,19 @@ function AdminGallery() {
       ) : (
         <div className="list-group">
           {images.map((img) => (
-            <div key={img._id} className="list-group-item d-flex align-items-center gap-3">
+            <div
+              key={img._id}
+              className="list-group-item d-flex align-items-center gap-3"
+            >
               <img
-                src={`http://localhost:5000${img.imageUrl}`}
+                src={`https://3-d-backend-3pgu.vercel.app${img.imageUrl}`}
                 alt="Gallery"
-                style={{ width: 80, height: 80, objectFit: "cover", borderRadius: 8 }}
+                style={{
+                  width: 80,
+                  height: 80,
+                  objectFit: "cover",
+                  borderRadius: 8,
+                }}
               />
               <input
                 type="text"
@@ -151,7 +178,12 @@ function AdminGallery() {
                 >
                   Save Title
                 </button>
-                <button className="btn btn-sm btn-danger" onClick={() => onDelete(img._id)}>Delete</button>
+                <button
+                  className="btn btn-sm btn-danger"
+                  onClick={() => onDelete(img._id)}
+                >
+                  Delete
+                </button>
               </div>
             </div>
           ))}
@@ -162,4 +194,3 @@ function AdminGallery() {
 }
 
 export default AdminGallery;
-

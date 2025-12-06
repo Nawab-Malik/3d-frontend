@@ -6,6 +6,7 @@ import Navbar from "../components/navbar";
 import Footer from "../components/footer";
 import VariationSelector from "../components/VariationSelector";
 import localProducts from "../data/products.json";
+import ProductFeedbackSection from "../components/ProductFeedbackSection";
 
 function ProductDetails() {
   const { id } = useParams();
@@ -17,16 +18,21 @@ function ProductDetails() {
   const [showCartNotification, setShowCartNotification] = useState(false);
   const [selectedVariation, setSelectedVariation] = useState(null);
 
+  const getToken = () =>
+    localStorage.getItem("token") || localStorage.getItem("userToken");
+
   const getAuthHeader = () => {
-    const token = localStorage.getItem("userToken");
+    const token = getToken();
     return token ? { Authorization: `Bearer ${token}` } : {};
   };
 
   const getImageUrl = (imageUrl) => {
-    if (!imageUrl) return "http://localhost:5000/uploads/default-product.png";
+    if (!imageUrl)
+      return "https://3-d-backend-3pgu.vercel.app/uploads/default-product.png";
     if (imageUrl.startsWith("http")) return imageUrl;
-    if (imageUrl.startsWith("/uploads")) return `http://localhost:5000${imageUrl}`;
-    return `http://localhost:5000/uploads/${imageUrl}`;
+    if (imageUrl.startsWith("/uploads"))
+      return `https://3-d-backend-3pgu.vercel.app${imageUrl}`;
+    return `https://3-d-backend-3pgu.vercel.app/uploads/${imageUrl}`;
   };
 
   useEffect(() => {
@@ -35,27 +41,43 @@ function ProductDetails() {
         setLoading(true);
         // Try backend first
         const [p, r] = await Promise.all([
-          axios.get(`http://localhost:5000/api/products/${id}`).catch((e) => e),
-          axios.get(`http://localhost:5000/api/products/${id}/related`).catch((e) => e),
+          axios
+            .get(`https://3-d-backend-3pgu.vercel.app/api/products/${id}`)
+            .catch((e) => e),
+          axios
+            .get(
+              `https://3-d-backend-3pgu.vercel.app/api/products/${id}/related`
+            )
+            .catch((e) => e),
         ]);
 
         if (p?.data && !p.isAxiosError) {
-          console.log('Product loaded:', p.data);
-          console.log('Has variations:', p.data.hasVariations);
-          console.log('Variations:', p.data.variations);
+          console.log("Product loaded:", p.data);
+          console.log("Has variations:", p.data.hasVariations);
+          console.log("Variations:", p.data.variations);
           setProduct(p.data);
           let rel = Array.isArray(r?.data?.products) ? r.data.products : [];
           // Fallback if related API fails or returns empty
           if (!rel || rel.length === 0) {
             try {
-              const gp = await axios.get(`http://localhost:5000/api/products?limit=50`).catch(() => null);
-              const all = Array.isArray(gp?.data?.products) ? gp.data.products : [];
+              const gp = await axios
+                .get(
+                  `https://3-d-backend-3pgu.vercel.app/api/products?limit=50`
+                )
+                .catch(() => null);
+              const all = Array.isArray(gp?.data?.products)
+                ? gp.data.products
+                : [];
               const baseCats = new Set((p.data?.categories || []).map(String));
               if (all.length) {
                 rel = all
                   .filter((x) => String(x._id) !== String(p.data._id))
                   .filter((x) =>
-                    baseCats.size === 0 ? true : (x.categories || []).some((c) => baseCats.has(String(c)))
+                    baseCats.size === 0
+                      ? true
+                      : (x.categories || []).some((c) =>
+                          baseCats.has(String(c))
+                        )
                   )
                   .slice(0, 8);
               }
@@ -70,13 +92,16 @@ function ProductDetails() {
           if (localIndex >= 0 && Array.isArray(localProducts)) {
             const lp = localProducts[localIndex];
             if (lp) {
-              const fileName = String(lp.imageUrl || "").split("/").pop();
+              const fileName = String(lp.imageUrl || "")
+                .split("/")
+                .pop();
               let href = "";
               try {
                 href = new URL(`../assets/${fileName}`, import.meta.url).href;
               } catch {
                 try {
-                  href = new URL(`../../images/${fileName}`, import.meta.url).href;
+                  href = new URL(`../../images/${fileName}`, import.meta.url)
+                    .href;
                 } catch {
                   href = lp.imageUrl;
                 }
@@ -88,20 +113,28 @@ function ProductDetails() {
               const baseCats = new Set((lp.categories || []).map(String));
               const relatedLocal = localProducts
                 .map((p, i) => {
-                  const name = String(p.imageUrl || "").split("/").pop();
+                  const name = String(p.imageUrl || "")
+                    .split("/")
+                    .pop();
                   let imgHref = "";
                   try {
-                    imgHref = new URL(`../assets/${name}`, import.meta.url).href;
+                    imgHref = new URL(`../assets/${name}`, import.meta.url)
+                      .href;
                   } catch {
                     try {
-                      imgHref = new URL(`../../images/${name}`, import.meta.url).href;
+                      imgHref = new URL(`../../images/${name}`, import.meta.url)
+                        .href;
                     } catch {
                       imgHref = p.imageUrl;
                     }
                   }
                   return { ...p, _id: `local-${i}`, imageUrl: imgHref };
                 })
-                .filter((p) => p._id !== id && (p.categories || []).some((c) => baseCats.has(String(c))))
+                .filter(
+                  (p) =>
+                    p._id !== id &&
+                    (p.categories || []).some((c) => baseCats.has(String(c)))
+                )
                 .slice(0, 8);
               setRelated(relatedLocal);
             } else {
@@ -126,7 +159,12 @@ function ProductDetails() {
 
   const addToCart = async () => {
     // Check if product has variations and one is selected
-    if (product.hasVariations && product.variations && product.variations.length > 0 && !selectedVariation) {
+    if (
+      product.hasVariations &&
+      product.variations &&
+      product.variations.length > 0 &&
+      !selectedVariation
+    ) {
       alert("Please select color and size options");
       return;
     }
@@ -139,31 +177,33 @@ function ProductDetails() {
 
     try {
       setAdding(true);
-      const token = localStorage.getItem("userToken");
+      const token = getToken();
       if (!token) {
         alert("Please login to add items to your cart");
         return;
       }
-      
-      const cartData = { 
-        productId: product._id, 
-        quantity: 1
+
+      const cartData = {
+        productId: product._id,
+        quantity: 1,
       };
-      
+
       // Add variation info if selected
       if (selectedVariation) {
         cartData.variation = {
           variationId: selectedVariation._id,
           color: selectedVariation.color,
           size: selectedVariation.size,
-          price: selectedVariation.price || product.price
+          price: selectedVariation.price || product.price,
         };
       }
-      
+
       await axios.post(
-        "http://localhost:5000/api/cart/add",
+        "https://3-d-backend-3pgu.vercel.app/api/cart/add",
         cartData,
-        { headers: getAuthHeader() }
+        {
+          headers: getAuthHeader(),
+        }
       );
       setShowCartNotification(true);
       setTimeout(() => setShowCartNotification(false), 4000);
@@ -179,7 +219,13 @@ function ProductDetails() {
     return (
       <>
         <Navbar />
-        <div style={{ paddingTop: "160px", textAlign: "center", minHeight: "60vh" }}>
+        <div
+          style={{
+            paddingTop: "160px",
+            textAlign: "center",
+            minHeight: "60vh",
+          }}
+        >
           Loading product...
         </div>
         <Footer />
@@ -191,7 +237,13 @@ function ProductDetails() {
     return (
       <>
         <Navbar />
-        <div style={{ paddingTop: "160px", textAlign: "center", minHeight: "60vh" }}>
+        <div
+          style={{
+            paddingTop: "160px",
+            textAlign: "center",
+            minHeight: "60vh",
+          }}
+        >
           Product not found
         </div>
         <Footer />
@@ -213,7 +265,13 @@ function ProductDetails() {
         }}
       >
         <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "30px" }}>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "1fr 1fr",
+              gap: "30px",
+            }}
+          >
             <div
               style={{
                 background: "white",
@@ -226,7 +284,10 @@ function ProductDetails() {
                 src={getImageUrl(product.imageUrl)}
                 alt={product.title}
                 style={{ width: "100%", height: "480px", objectFit: "contain" }}
-                onError={(e) => (e.currentTarget.src = "http://localhost:5000/uploads/default-product.png")}
+                onError={(e) =>
+                  (e.currentTarget.src =
+                    "https://3-d-backend-3pgu.vercel.app/uploads/default-product.png")
+                }
               />
             </div>
 
@@ -238,8 +299,17 @@ function ProductDetails() {
                 boxShadow: "0 2px 10px rgba(0,0,0,0.08)",
               }}
             >
-              <h1 style={{ margin: 0, marginBottom: "10px" }}>{product.title}</h1>
-              <div style={{ display: "flex", flexWrap: "wrap", gap: "8px", marginBottom: "12px" }}>
+              <h1 style={{ margin: 0, marginBottom: "10px" }}>
+                {product.title}
+              </h1>
+              <div
+                style={{
+                  display: "flex",
+                  flexWrap: "wrap",
+                  gap: "8px",
+                  marginBottom: "12px",
+                }}
+              >
                 {(product.categories || []).map((c, i) => (
                   <span
                     key={i}
@@ -257,35 +327,43 @@ function ProductDetails() {
                   </span>
                 ))}
               </div>
-              <p style={{ color: "#666", lineHeight: 1.6 }}>{product.description}</p>
-              
-              {/* Debug Info - Remove after testing */}
-              {console.log('Rendering variations check:', {
-                hasVariations: product.hasVariations,
-                variationsLength: product.variations?.length,
-                variations: product.variations
-              })}
-              
+              <p style={{ color: "#666", lineHeight: 1.6 }}>
+                {product.description}
+              </p>
+
               {/* Product Variations */}
-              {product.hasVariations && product.variations && product.variations.length > 0 ? (
+              {product.hasVariations &&
+              product.variations &&
+              product.variations.length > 0 ? (
                 <VariationSelector
                   variations={product.variations}
                   onVariationChange={setSelectedVariation}
                   basePrice={product.price}
                 />
-              ) : (
-                <div style={{ padding: "10px", background: "#f0f0f0", borderRadius: "4px", fontSize: "12px", marginBottom: "10px" }}>
-                  Debug: hasVariations={String(product.hasVariations)}, variations count={product.variations?.length || 0}
-                </div>
-              )}
-              
-              <div style={{ display: "flex", alignItems: "center", gap: "10px", margin: "16px 0" }}>
+              ) : null}
+
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "10px",
+                  margin: "16px 0",
+                }}
+              >
                 <span style={{ fontSize: "1.8rem", fontWeight: 700 }}>
-                  ${selectedVariation && selectedVariation.price ? selectedVariation.price.toFixed(2) : product.price.toFixed(2)}
+                  £
+                  {selectedVariation && selectedVariation.price
+                    ? selectedVariation.price.toFixed(2)
+                    : product.price.toFixed(2)}
                 </span>
-                {product.originalPrice && product.originalPrice > product.price && (
-                  <span style={{ textDecoration: "line-through", color: "#999" }}>${product.originalPrice.toFixed(2)}</span>
-                )}
+                {product.originalPrice &&
+                  product.originalPrice > product.price && (
+                    <span
+                      style={{ textDecoration: "line-through", color: "#999" }}
+                    >
+                      £{product.originalPrice.toFixed(2)}
+                    </span>
+                  )}
               </div>
               <div style={{ display: "flex", gap: "12px" }}>
                 <button
@@ -323,6 +401,16 @@ function ProductDetails() {
             </div>
           </div>
 
+          {/* Product Reviews Section - NEW */}
+          {product &&
+            product._id &&
+            !String(product._id).startsWith("local-") && (
+              <ProductFeedbackSection
+                productId={product._id}
+                productTitle={product.title}
+              />
+            )}
+
           <section style={{ marginTop: "50px" }}>
             <h2 style={{ marginBottom: "20px" }}>Related Products</h2>
             {related.length === 0 ? (
@@ -350,17 +438,35 @@ function ProductDetails() {
                     }}
                     onClick={() => navigate(`/products/${rp._id}`)}
                   >
-                    <div style={{ height: "180px", display: "flex", alignItems: "center", justifyContent: "center", background: "#fafafa" }}>
+                    <div
+                      style={{
+                        height: "180px",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        background: "#fafafa",
+                      }}
+                    >
                       <img
                         src={getImageUrl(rp.imageUrl)}
                         alt={rp.title}
-                        style={{ width: "100%", height: "100%", objectFit: "contain", padding: "10px" }}
-                        onError={(e) => (e.currentTarget.src = "http://localhost:5000/uploads/default-product.png")}
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          objectFit: "contain",
+                          padding: "10px",
+                        }}
+                        onError={(e) =>
+                          (e.currentTarget.src =
+                            "https://3-d-backend-3pgu.vercel.app/uploads/default-product.png")
+                        }
                       />
                     </div>
                     <div style={{ padding: "12px" }}>
-                      <div style={{ fontWeight: 700, marginBottom: "6px" }}>{rp.title}</div>
-                      <div style={{ color: "#333" }}>${rp.price}</div>
+                      <div style={{ fontWeight: 700, marginBottom: "6px" }}>
+                        {rp.title}
+                      </div>
+                      <div style={{ color: "#333" }}>£{rp.price}</div>
                     </div>
                   </div>
                 ))}
@@ -390,8 +496,12 @@ function ProductDetails() {
           }}
         >
           <div style={{ flex: 1 }}>
-            <p style={{ margin: "0 0 8px 0", fontWeight: "bold" }}>✅ Added to Cart!</p>
-            <p style={{ margin: 0, fontSize: "0.9rem" }}>{product?.title} was added to your cart.</p>
+            <p style={{ margin: "0 0 8px 0", fontWeight: "bold" }}>
+              ✅ Added to Cart!
+            </p>
+            <p style={{ margin: 0, fontSize: "0.9rem" }}>
+              {product?.title} was added to your cart.
+            </p>
           </div>
           <button
             onClick={() => {
@@ -413,7 +523,14 @@ function ProductDetails() {
           </button>
           <button
             onClick={() => setShowCartNotification(false)}
-            style={{ background: "none", border: "none", cursor: "pointer", fontSize: 20, marginLeft: 5, color: "#666" }}
+            style={{
+              background: "none",
+              border: "none",
+              cursor: "pointer",
+              fontSize: 20,
+              marginLeft: 5,
+              color: "#666",
+            }}
           >
             ×
           </button>

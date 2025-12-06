@@ -32,20 +32,25 @@ export const CartProvider = ({ children }) => {
     loading: false,
     error: null,
   });
+  const getToken = () =>
+    localStorage.getItem("token") || localStorage.getItem("userToken");
 
   const fetchCart = async () => {
     try {
       dispatch({ type: "SET_LOADING", payload: true });
-      const token = localStorage.getItem("userToken");
+      const token = getToken();
 
       if (!token) {
         dispatch({ type: "SET_LOADING", payload: false });
         return;
       }
 
-      const response = await axios.get("http://localhost:5000/api/cart", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const response = await axios.get(
+        "https://3-d-backend-3pgu.vercel.app/api/cart",
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
 
       dispatch({ type: "SET_CART", payload: response.data.cart });
     } catch (error) {
@@ -59,10 +64,10 @@ export const CartProvider = ({ children }) => {
   const addToCart = async (productId, quantity = 1) => {
     try {
       dispatch({ type: "SET_LOADING", payload: true });
-      const token = localStorage.getItem("userToken");
+      const token = getToken();
 
       const response = await axios.post(
-        "http://localhost:5000/api/cart/add",
+        "https://3-d-backend-3pgu.vercel.app/api/cart/add",
         { productId, quantity },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -79,10 +84,10 @@ export const CartProvider = ({ children }) => {
   const updateCartItem = async (itemId, quantity) => {
     try {
       dispatch({ type: "SET_LOADING", payload: true });
-      const token = localStorage.getItem("userToken");
+      const token = getToken();
 
       const response = await axios.put(
-        `http://localhost:5000/api/cart/update/${itemId}`,
+        `https://3-d-backend-3pgu.vercel.app/api/cart/update/${itemId}`,
         { quantity },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -99,10 +104,10 @@ export const CartProvider = ({ children }) => {
   const removeFromCart = async (itemId) => {
     try {
       dispatch({ type: "SET_LOADING", payload: true });
-      const token = localStorage.getItem("userToken");
+      const token = getToken();
 
       const response = await axios.delete(
-        `http://localhost:5000/api/cart/remove/${itemId}`,
+        `https://3-d-backend-3pgu.vercel.app/api/cart/remove/${itemId}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -121,9 +126,9 @@ export const CartProvider = ({ children }) => {
   const clearCart = async () => {
     try {
       dispatch({ type: "SET_LOADING", payload: true });
-      const token = localStorage.getItem("userToken");
+      const token = getToken();
 
-      await axios.delete("http://localhost:5000/api/cart/clear", {
+      await axios.delete("https://3-d-backend-3pgu.vercel.app/api/cart/clear", {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -138,7 +143,7 @@ export const CartProvider = ({ children }) => {
 
   useEffect(() => {
     // Fetch cart when component mounts if user is logged in
-    const token = localStorage.getItem("userToken");
+    const token = getToken();
     if (token) {
       fetchCart();
     }

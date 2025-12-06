@@ -6,7 +6,7 @@ function UserForm() {
 
   // Fetch users from backend
   const fetchUsers = async () => {
-    const res = await fetch("http://localhost:5000/api/users");
+    const res = await fetch("https://3-d-backend-3pgu.vercel.app/api/users");
     const data = await res.json();
     setUsers(data);
   };
@@ -14,7 +14,7 @@ function UserForm() {
   // Submit form
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await fetch("http://localhost:5000/api/users", {
+    await fetch("https://3-d-backend-3pgu.vercel.app/api/users", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(form),

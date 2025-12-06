@@ -38,10 +38,13 @@ function ResetPassword() {
 
     try {
       setLoading(true);
-      const res = await axios.post("http://localhost:5000/api/users/reset-password", {
-        token,
-        password,
-      });
+      const res = await axios.post(
+        "https://3-d-backend-3pgu.vercel.app/api/users/reset-password",
+        {
+          token,
+          password,
+        }
+      );
       setMessage(res.data?.message || "Password has been reset.");
       setTimeout(() => navigate("/"), 1500);
     } catch (e) {
@@ -54,26 +57,107 @@ function ResetPassword() {
   return (
     <>
       <Navbar />
-      <div style={{ paddingTop: "160px", paddingLeft: 20, paddingRight: 20, minHeight: "60vh" }}>
-        <div style={{ maxWidth: 480, margin: "0 auto", background: "white", padding: 24, borderRadius: 12, boxShadow: "0 2px 10px rgba(0,0,0,0.1)" }}>
+      <div
+        style={{
+          paddingTop: "160px",
+          paddingLeft: 20,
+          paddingRight: 20,
+          minHeight: "60vh",
+        }}
+      >
+        <div
+          style={{
+            maxWidth: 480,
+            margin: "0 auto",
+            background: "white",
+            padding: 24,
+            borderRadius: 12,
+            boxShadow: "0 2px 10px rgba(0,0,0,0.1)",
+          }}
+        >
           <h2 style={{ marginBottom: 10 }}>Reset Password</h2>
-          {email && <p style={{ color: "#666", marginBottom: 16 }}>for {email}</p>}
+          {email && (
+            <p style={{ color: "#666", marginBottom: 16 }}>for {email}</p>
+          )}
           {error && (
-            <div style={{ background: "#f8d7da", color: "#721c24", padding: 10, borderRadius: 6, marginBottom: 12 }}>{error}</div>
+            <div
+              style={{
+                background: "#f8d7da",
+                color: "#721c24",
+                padding: 10,
+                borderRadius: 6,
+                marginBottom: 12,
+              }}
+            >
+              {error}
+            </div>
           )}
           {message && (
-            <div style={{ background: "#d4edda", color: "#155724", padding: 10, borderRadius: 6, marginBottom: 12 }}>{message}</div>
+            <div
+              style={{
+                background: "#d4edda",
+                color: "#155724",
+                padding: 10,
+                borderRadius: 6,
+                marginBottom: 12,
+              }}
+            >
+              {message}
+            </div>
           )}
           <form onSubmit={submit}>
             <div style={{ marginBottom: 12 }}>
-              <label style={{ display: "block", marginBottom: 6, fontWeight: 600 }}>New Password</label>
-              <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required style={{ width: "100%", padding: 10, border: "1px solid #ddd", borderRadius: 6 }} />
+              <label
+                style={{ display: "block", marginBottom: 6, fontWeight: 600 }}
+              >
+                New Password
+              </label>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                style={{
+                  width: "100%",
+                  padding: 10,
+                  border: "1px solid #ddd",
+                  borderRadius: 6,
+                }}
+              />
             </div>
             <div style={{ marginBottom: 16 }}>
-              <label style={{ display: "block", marginBottom: 6, fontWeight: 600 }}>Confirm Password</label>
-              <input type="password" value={confirm} onChange={(e) => setConfirm(e.target.value)} required style={{ width: "100%", padding: 10, border: "1px solid #ddd", borderRadius: 6 }} />
+              <label
+                style={{ display: "block", marginBottom: 6, fontWeight: 600 }}
+              >
+                Confirm Password
+              </label>
+              <input
+                type="password"
+                value={confirm}
+                onChange={(e) => setConfirm(e.target.value)}
+                required
+                style={{
+                  width: "100%",
+                  padding: 10,
+                  border: "1px solid #ddd",
+                  borderRadius: 6,
+                }}
+              />
             </div>
-            <button type="submit" disabled={loading || !token} style={{ width: "100%", padding: 12, background: "#514F6E", color: "white", border: "none", borderRadius: 6, cursor: loading ? "not-allowed" : "pointer", fontWeight: 600 }}>
+            <button
+              type="submit"
+              disabled={loading || !token}
+              style={{
+                width: "100%",
+                padding: 12,
+                background: "#514F6E",
+                color: "white",
+                border: "none",
+                borderRadius: 6,
+                cursor: loading ? "not-allowed" : "pointer",
+                fontWeight: 600,
+              }}
+            >
               {loading ? "Resetting..." : "Reset Password"}
             </button>
           </form>

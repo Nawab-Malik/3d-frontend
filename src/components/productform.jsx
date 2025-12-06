@@ -54,7 +54,14 @@ function ProductForm({ product, onClose, onSave }) {
   const addVariation = () => {
     setVariations([
       ...variations,
-      { color: "", colorHex: "#000000", size: "", price: "", stock: 0, isActive: true }
+      {
+        color: "",
+        colorHex: "#000000",
+        size: "",
+        price: "",
+        stock: 0,
+        isActive: true,
+      },
     ]);
   };
 
@@ -99,14 +106,14 @@ function ProductForm({ product, onClose, onSave }) {
       if (product) {
         // Update existing product
         await axios.put(
-          `http://localhost:5000/api/admin/products/${product._id}`,
+          `https://3-d-backend-3pgu.vercel.app/api/admin/products/${product._id}`,
           formData,
           config
         );
       } else {
         // Create new product
         await axios.post(
-          "http://localhost:5000/api/admin/products",
+          "https://3-d-backend-3pgu.vercel.app/api/admin/products",
           formData,
           config
         );
@@ -228,7 +235,7 @@ function ProductForm({ product, onClose, onSave }) {
                     imagePreview.startsWith("data:") ||
                     imagePreview.startsWith("http")
                       ? imagePreview
-                      : `http://localhost:5000${imagePreview}`
+                      : `https://3-d-backend-3pgu.vercel.app${imagePreview}`
                   }
                   alt="Preview"
                   style={{
@@ -245,8 +252,20 @@ function ProductForm({ product, onClose, onSave }) {
           </div>
 
           {/* Product Variations */}
-          <div style={{ marginBottom: "15px", borderTop: "2px solid #eee", paddingTop: "15px" }}>
-            <div style={{ display: "flex", alignItems: "center", marginBottom: "10px" }}>
+          <div
+            style={{
+              marginBottom: "15px",
+              borderTop: "2px solid #eee",
+              paddingTop: "15px",
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                marginBottom: "10px",
+              }}
+            >
               <input
                 type="checkbox"
                 checked={hasVariations}
@@ -263,7 +282,14 @@ function ProductForm({ product, onClose, onSave }) {
 
             {hasVariations && (
               <div style={{ marginTop: "15px" }}>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "10px" }}>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    marginBottom: "10px",
+                  }}
+                >
                   <h4 style={{ margin: 0 }}>Product Variations</h4>
                   <button
                     type="button"
@@ -275,7 +301,7 @@ function ProductForm({ product, onClose, onSave }) {
                       border: "none",
                       borderRadius: "4px",
                       cursor: "pointer",
-                      fontSize: "14px"
+                      fontSize: "14px",
                     }}
                   >
                     + Add Variation
@@ -295,11 +321,19 @@ function ProductForm({ product, onClose, onSave }) {
                         padding: "12px",
                         marginBottom: "10px",
                         borderRadius: "6px",
-                        backgroundColor: "#f9f9f9"
+                        backgroundColor: "#f9f9f9",
                       }}
                     >
-                      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "10px" }}>
-                        <strong style={{ fontSize: "14px" }}>Variation #{index + 1}</strong>
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          marginBottom: "10px",
+                        }}
+                      >
+                        <strong style={{ fontSize: "14px" }}>
+                          Variation #{index + 1}
+                        </strong>
                         <button
                           type="button"
                           onClick={() => removeVariation(index)}
@@ -310,77 +344,147 @@ function ProductForm({ product, onClose, onSave }) {
                             border: "none",
                             borderRadius: "4px",
                             cursor: "pointer",
-                            fontSize: "12px"
+                            fontSize: "12px",
                           }}
                         >
                           Remove
                         </button>
                       </div>
 
-                      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" }}>
+                      <div
+                        style={{
+                          display: "grid",
+                          gridTemplateColumns: "1fr 1fr",
+                          gap: "10px",
+                        }}
+                      >
                         <div>
-                          <label style={{ fontSize: "13px", display: "block", marginBottom: "4px" }}>
+                          <label
+                            style={{
+                              fontSize: "13px",
+                              display: "block",
+                              marginBottom: "4px",
+                            }}
+                          >
                             Color Name
                           </label>
                           <input
                             type="text"
                             value={variation.color}
-                            onChange={(e) => updateVariation(index, "color", e.target.value)}
+                            onChange={(e) =>
+                              updateVariation(index, "color", e.target.value)
+                            }
                             placeholder="e.g., Red, Blue"
-                            style={{ width: "100%", padding: "6px", fontSize: "13px" }}
+                            style={{
+                              width: "100%",
+                              padding: "6px",
+                              fontSize: "13px",
+                            }}
                           />
                         </div>
 
                         <div>
-                          <label style={{ fontSize: "13px", display: "block", marginBottom: "4px" }}>
+                          <label
+                            style={{
+                              fontSize: "13px",
+                              display: "block",
+                              marginBottom: "4px",
+                            }}
+                          >
                             Color Hex
                           </label>
                           <input
                             type="color"
                             value={variation.colorHex}
-                            onChange={(e) => updateVariation(index, "colorHex", e.target.value)}
-                            style={{ width: "100%", padding: "2px", height: "32px" }}
+                            onChange={(e) =>
+                              updateVariation(index, "colorHex", e.target.value)
+                            }
+                            style={{
+                              width: "100%",
+                              padding: "2px",
+                              height: "32px",
+                            }}
                           />
                         </div>
 
                         <div>
-                          <label style={{ fontSize: "13px", display: "block", marginBottom: "4px" }}>
+                          <label
+                            style={{
+                              fontSize: "13px",
+                              display: "block",
+                              marginBottom: "4px",
+                            }}
+                          >
                             Size
                           </label>
                           <input
                             type="text"
                             value={variation.size}
-                            onChange={(e) => updateVariation(index, "size", e.target.value)}
+                            onChange={(e) =>
+                              updateVariation(index, "size", e.target.value)
+                            }
                             placeholder="e.g., S, M, L, XL"
-                            style={{ width: "100%", padding: "6px", fontSize: "13px" }}
+                            style={{
+                              width: "100%",
+                              padding: "6px",
+                              fontSize: "13px",
+                            }}
                           />
                         </div>
 
                         <div>
-                          <label style={{ fontSize: "13px", display: "block", marginBottom: "4px" }}>
+                          <label
+                            style={{
+                              fontSize: "13px",
+                              display: "block",
+                              marginBottom: "4px",
+                            }}
+                          >
                             Price (optional)
                           </label>
                           <input
                             type="number"
                             value={variation.price}
-                            onChange={(e) => updateVariation(index, "price", e.target.value)}
+                            onChange={(e) =>
+                              updateVariation(index, "price", e.target.value)
+                            }
                             placeholder="Leave empty for base price"
                             min="0"
                             step="0.01"
-                            style={{ width: "100%", padding: "6px", fontSize: "13px" }}
+                            style={{
+                              width: "100%",
+                              padding: "6px",
+                              fontSize: "13px",
+                            }}
                           />
                         </div>
 
                         <div>
-                          <label style={{ fontSize: "13px", display: "block", marginBottom: "4px" }}>
+                          <label
+                            style={{
+                              fontSize: "13px",
+                              display: "block",
+                              marginBottom: "4px",
+                            }}
+                          >
                             Stock Quantity
                           </label>
                           <input
                             type="number"
                             value={variation.stock}
-                            onChange={(e) => updateVariation(index, "stock", parseInt(e.target.value) || 0)}
+                            onChange={(e) =>
+                              updateVariation(
+                                index,
+                                "stock",
+                                parseInt(e.target.value) || 0
+                              )
+                            }
                             min="0"
-                            style={{ width: "100%", padding: "6px", fontSize: "13px" }}
+                            style={{
+                              width: "100%",
+                              padding: "6px",
+                              fontSize: "13px",
+                            }}
                           />
                         </div>
 
@@ -388,10 +492,18 @@ function ProductForm({ product, onClose, onSave }) {
                           <input
                             type="checkbox"
                             checked={variation.isActive}
-                            onChange={(e) => updateVariation(index, "isActive", e.target.checked)}
+                            onChange={(e) =>
+                              updateVariation(
+                                index,
+                                "isActive",
+                                e.target.checked
+                              )
+                            }
                             style={{ marginRight: "6px" }}
                           />
-                          <label style={{ margin: 0, fontSize: "13px" }}>Active</label>
+                          <label style={{ margin: 0, fontSize: "13px" }}>
+                            Active
+                          </label>
                         </div>
                       </div>
                     </div>

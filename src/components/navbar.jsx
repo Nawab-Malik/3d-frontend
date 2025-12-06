@@ -1,5 +1,5 @@
 // components/Navbar.js
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   FaHome,
   FaQuoteRight,
@@ -10,88 +10,113 @@ import {
   FaSignInAlt,
   FaUserPlus,
   FaShoppingCart,
-  FaImages
+  FaImages,
 } from "react-icons/fa";
 import logo from "../assets/logo.svg";
 import LoginModal from "./loginmodel";
 import SignupModal from "./signupmodel";
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, Link } from "react-router-dom";
+import { AuthContext } from "../context/AuthContext";
 import "./navbar.css";
 
 function Navbar() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { isAuthenticated, user, logout, token } = useContext(AuthContext);
   const [active, setActive] = useState("Home");
   const [showLogin, setShowLogin] = useState(false);
   const [showSignup, setShowSignup] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [user, setUser] = useState(null);
-
-  // Check if user is already logged in on component mount
-  useEffect(() => {
-    const token = localStorage.getItem('userToken');
-    const userData = localStorage.getItem('userData');
-    
-    if (token && userData) {
-      try {
-        setIsLoggedIn(true);
-        setUser(JSON.parse(userData));
-      } catch (error) {
-        console.error("Error parsing user data:", error);
-        // Clear invalid data
-        localStorage.removeItem('userData');
-      }
-    }
-  }, []);
+  const [showCartDropdown, setShowCartDropdown] = useState(false);
+  const [orders, setOrders] = useState([]);
+  const [ordersLoading, setOrdersLoading] = useState(false);
+  const [ordersError, setOrdersError] = useState("");
 
   // Update active state based on current location
   useEffect(() => {
     const pathToActive = {
-      '/': 'Home',
-      '/second': 'Quote',
-      '/about': 'About Us',
-      '/products': 'Store',
-      '/delivery': 'Delivery',
-      '/contact': 'Contact',
-      '/gallery': 'Gallery'
+      "/": "Home",
+      "/second": "Quote",
+      "/about": "About Us",
+      "/products": "Store",
+      "/delivery": "Delivery",
+      "/contact": "Contact",
+      "/gallery": "Gallery",
     };
 
-    const currentActive = pathToActive[location.pathname] || 'Home';
+    const currentActive = pathToActive[location.pathname] || "Home";
     setActive(currentActive);
   }, [location.pathname]);
 
-  const isAdminRoute = location.pathname.startsWith('/admin');
-  const isUserLoggedIn = isLoggedIn && user?.role !== 'admin';
+  useEffect(() => {
+    setShowCartDropdown(false);
+  }, [location.pathname]);
+
+  const isAdminRoute = location.pathname.startsWith("/admin");
+  const isUserLoggedIn = isAuthenticated && user?.role !== "admin";
 
   const menuItems = [
     { name: "Home", icon: <FaHome className="me-2" />, path: "/" },
-    { name: "Quote", icon: <FaQuoteRight className="me-2" />, path: "/second" },
-    { name: "About Us", icon: <FaInfoCircle className="me-2" />, path: "/about" },
+    // { name: "Quote", icon: <FaQuoteRight className="me-2" />, path: "/second" },
+    {
+      name: "About Us",
+      icon: <FaInfoCircle className="me-2" />,
+      path: "/about",
+    },
     { name: "Store", icon: <FaStore className="me-2" />, path: "/products" },
     { name: "Delivery", icon: <FaTruck className="me-2" />, path: "/delivery" },
     { name: "Gallery", icon: <FaImages className="me-2" />, path: "/gallery" },
   ];
 
   const handleLoginSuccess = (userData) => {
-    setIsLoggedIn(true);
-    setUser(userData);
+    // Assuming AuthContext handles the login state
     setShowLogin(false);
-    
-    // Store user data in localStorage for persistence
-    localStorage.setItem('userData', JSON.stringify(userData));
-    
+
     // Navigate to home after login
-    navigate('/');
+    navigate("/");
   };
 
   const handleLogout = () => {
-    setIsLoggedIn(false);
-    setUser(null);
-    localStorage.removeItem('userToken');
-    localStorage.removeItem('userData');
-    
-    // Optional: Navigate to home after logout
-    navigate('/');
+    logout();
+    // Redirect to home or login
+    window.location.href = "/";
+  };
+
+  const fetchOrders = async () => {
+    if (!isAuthenticated || !token) return;
+
+    try {
+      setOrdersLoading(true);
+      setOrdersError("");
+
+      const res = await fetch(
+        "https://3-d-backend-3pgu.vercel.app/api/orders",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (!res.ok) {
+        throw new Error("Failed to load orders");
+      }
+
+      const data = await res.json();
+      setOrders(data.orders || []);
+    } catch (err) {
+      console.error("Failed to fetch orders", err);
+      setOrdersError("Unable to load recent orders.");
+    } finally {
+      setOrdersLoading(false);
+    }
+  };
+
+  const toggleCartDropdown = () => {
+    const next = !showCartDropdown;
+    setShowCartDropdown(next);
+    if (next) {
+      fetchOrders();
+    }
   };
 
   return (
@@ -106,7 +131,7 @@ function Navbar() {
           width: "100%",
           zIndex: 1030,
           boxShadow: "0 2px 5px rgba(0,0,0,0.2)",
-          height: "120px"
+          height: "120px",
         }}
       >
         <div className="container-xl d-flex align-items-center justify-content-between">
@@ -118,7 +143,7 @@ function Navbar() {
             onClick={(e) => {
               e.preventDefault();
               setActive("Home");
-              navigate('/');
+              navigate("/");
             }}
           >
             <img
@@ -145,7 +170,10 @@ function Navbar() {
           </button>
 
           {/* Menu + Buttons */}
-          <div className="collapse navbar-collapse justify-content-center" id="navbarNav">
+          <div
+            className="collapse navbar-collapse justify-content-center"
+            id="navbarNav"
+          >
             {/* Menu items */}
             <ul className="navbar-nav mx-auto">
               {menuItems.map((item) => (
@@ -168,7 +196,8 @@ function Navbar() {
                       transition: "all 0.3s ease",
                     }}
                     onMouseEnter={(e) => {
-                      e.currentTarget.style.backgroundColor = "rgba(255,255,255,0.15)";
+                      e.currentTarget.style.backgroundColor =
+                        "rgba(255,255,255,0.15)";
                     }}
                     onMouseLeave={(e) => {
                       if (active !== item.name) {
@@ -184,32 +213,254 @@ function Navbar() {
             </ul>
 
             {/* Auth Buttons */}
-            <div className="d-flex align-items-center ms-auto" style={{ paddingRight: "20px", gap: "10px" }}>
-              {!isAdminRoute && (
-                isUserLoggedIn ? (
+            <div
+              className="d-flex align-items-center ms-auto"
+              style={{ paddingRight: "20px", gap: "10px" }}
+            >
+              {!isAdminRoute &&
+                (isUserLoggedIn ? (
                   <div className="d-flex align-items-center gap-3">
-                    <span 
+                    <span
                       className="text-white me-2"
-                      style={{ 
-                        fontSize: '0.95rem',
-                        fontWeight: '500'
+                      style={{
+                        fontSize: "0.95rem",
+                        fontWeight: "500",
                       }}
                     >
                       Welcome, {user?.name}
                     </span>
-                    <button
-                      className="btn btn-outline-light d-flex align-items-center"
-                      onClick={() => navigate('/cart')}
-                      style={{
-                        borderRadius: "8px",
-                        transition: "all 0.3s ease",
-                        padding: "6px 12px"
-                      }}
-                      title="View Cart"
-                    >
-                      <FaShoppingCart className="me-1" />
-                      Cart
-                    </button>
+                    <div style={{ position: "relative" }}>
+                      <button
+                        className="btn btn-outline-light d-flex align-items-center"
+                        onClick={toggleCartDropdown}
+                        style={{
+                          borderRadius: "8px",
+                          transition: "all 0.3s ease",
+                          padding: "6px 12px",
+                        }}
+                        title="View Cart and Orders"
+                      >
+                        <FaShoppingCart className="me-1" />
+                        Cart
+                        <span
+                          style={{
+                            marginLeft: "6px",
+                            fontSize: "0.75rem",
+                          }}
+                        >
+                          {showCartDropdown ? "▲" : "▼"}
+                        </span>
+                      </button>
+                      {showCartDropdown && (
+                        <div
+                          style={{
+                            position: "absolute",
+                            right: 0,
+                            marginTop: "8px",
+                            minWidth: "260px",
+                            backgroundColor: "white",
+                            color: "#212529",
+                            borderRadius: "8px",
+                            boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+                            zIndex: 2000,
+                            padding: "12px",
+                          }}
+                        >
+                          <div
+                            style={{
+                              display: "flex",
+                              flexDirection: "column",
+                              gap: "8px",
+                              marginBottom: "10px",
+                              borderBottom: "1px solid #eee",
+                              paddingBottom: "10px",
+                            }}
+                          >
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setShowCartDropdown(false);
+                                navigate("/cart");
+                              }}
+                              style={{
+                                background: "transparent",
+                                border: "none",
+                                padding: 0,
+                                textAlign: "left",
+                                color: "#514F6E",
+                                fontWeight: 600,
+                                cursor: "pointer",
+                              }}
+                            >
+                              View Cart
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setShowCartDropdown(false);
+                                navigate("/track-order");
+                              }}
+                              style={{
+                                background: "transparent",
+                                border: "none",
+                                padding: 0,
+                                textAlign: "left",
+                                color: "#514F6E",
+                                cursor: "pointer",
+                              }}
+                            >
+                              Track Orders
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setShowCartDropdown(false);
+                                navigate("/delivery");
+                              }}
+                              style={{
+                                background: "transparent",
+                                border: "none",
+                                padding: 0,
+                                textAlign: "left",
+                                color: "#514F6E",
+                                cursor: "pointer",
+                              }}
+                            >
+                              Shipping Information
+                            </button>
+                            <Link
+                              to="/coupons"
+                              style={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: "8px",
+                                padding: "10px 15px",
+                                color: "#333",
+                                textDecoration: "none",
+                                borderRadius: "6px",
+                                transition: "background 0.3s ease",
+                              }}
+                              onMouseOver={(e) =>
+                                (e.currentTarget.style.backgroundColor =
+                                  "#f0f0f0")
+                              }
+                              onMouseOut={(e) =>
+                                (e.currentTarget.style.backgroundColor =
+                                  "transparent")
+                              }
+                            >
+                              🎁 Coupons
+                            </Link>
+                          </div>
+                          <div
+                            style={{
+                              marginBottom: "6px",
+                              fontWeight: 600,
+                            }}
+                          >
+                            Recent Orders
+                          </div>
+                          {ordersLoading && (
+                            <div
+                              style={{
+                                fontSize: "0.9rem",
+                                color: "#666",
+                              }}
+                            >
+                              Loading orders...
+                            </div>
+                          )}
+                          {ordersError && !ordersLoading && (
+                            <div
+                              style={{
+                                fontSize: "0.9rem",
+                                color: "#dc3545",
+                              }}
+                            >
+                              {ordersError}
+                            </div>
+                          )}
+                          {!ordersLoading &&
+                            !ordersError &&
+                            orders.length === 0 && (
+                              <div
+                                style={{
+                                  fontSize: "0.9rem",
+                                  color: "#666",
+                                }}
+                              >
+                                No recent orders found.
+                              </div>
+                            )}
+                          {!ordersLoading &&
+                            !ordersError &&
+                            orders.slice(0, 3).map((o) => (
+                              <button
+                                key={o._id}
+                                type="button"
+                                onClick={() => {
+                                  setShowCartDropdown(false);
+                                  navigate("/order-confirmation", {
+                                    state: { order: o },
+                                  });
+                                }}
+                                style={{
+                                  width: "100%",
+                                  textAlign: "left",
+                                  background: "transparent",
+                                  border: "none",
+                                  padding: "6px 0",
+                                  cursor: "pointer",
+                                  fontSize: "0.9rem",
+                                }}
+                              >
+                                <div
+                                  style={{
+                                    display: "flex",
+                                    justifyContent: "space-between",
+                                    alignItems: "center",
+                                  }}
+                                >
+                                  <span
+                                    style={{
+                                      fontWeight: 600,
+                                      color: "#343a40",
+                                    }}
+                                  >
+                                    #{o.orderNo}
+                                  </span>
+                                  <span
+                                    style={{
+                                      fontSize: "0.8rem",
+                                      padding: "2px 8px",
+                                      borderRadius: "12px",
+                                      backgroundColor: "#e9ecef",
+                                      textTransform: "uppercase",
+                                    }}
+                                  >
+                                    {o.status || "pending"}
+                                  </span>
+                                </div>
+                                <div
+                                  style={{
+                                    display: "flex",
+                                    justifyContent: "space-between",
+                                    fontSize: "0.8rem",
+                                    color: "#666",
+                                  }}
+                                >
+                                  <span>
+                                    {new Date(o.createdAt).toLocaleDateString()}
+                                  </span>
+                                  <span>
+                                    ${o.grandTotal?.toFixed(2) || "0.00"}
+                                  </span>
+                                </div>
+                              </button>
+                            ))}
+                        </div>
+                      )}
+                    </div>
                     <button
                       className="btn btn-outline-light"
                       onClick={handleLogout}
@@ -217,7 +468,7 @@ function Navbar() {
                         borderRadius: "8px",
                         transition: "all 0.3s ease",
                         whiteSpace: "nowrap",
-                        padding: "6px 12px"
+                        padding: "6px 12px",
                       }}
                     >
                       Logout
@@ -229,7 +480,8 @@ function Navbar() {
                       className="btn auth-btn px-3"
                       onClick={() => setShowLogin(true)}
                       onMouseEnter={(e) => {
-                        e.currentTarget.style.backgroundColor = "rgba(255,255,255,0.9)";
+                        e.currentTarget.style.backgroundColor =
+                          "rgba(255,255,255,0.9)";
                       }}
                       onMouseLeave={(e) => {
                         e.currentTarget.style.backgroundColor = "white";
@@ -272,14 +524,13 @@ function Navbar() {
                       <FaUserPlus className="me-1" /> Sign Up
                     </button>
                   </>
-                )
-              )}
+                ))}
 
               {/* Contact Us button */}
               <button
                 className="btn contact-btn px-4"
                 type="button"
-                onClick={() => navigate('/contact')}
+                onClick={() => navigate("/contact")}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.backgroundColor = "black";
                   e.currentTarget.style.color = "white";
@@ -364,10 +615,10 @@ function Navbar() {
       </nav>
 
       {/* Login/Signup modals are hidden on admin routes */}
-      {!location.pathname.startsWith('/admin') && (
-        <LoginModal 
-          show={showLogin} 
-          handleClose={() => setShowLogin(false)} 
+      {!location.pathname.startsWith("/admin") && (
+        <LoginModal
+          show={showLogin}
+          handleClose={() => setShowLogin(false)}
           handleLoginSuccess={handleLoginSuccess}
           showSignup={() => {
             setShowLogin(false);
@@ -376,10 +627,10 @@ function Navbar() {
         />
       )}
 
-      {!location.pathname.startsWith('/admin') && (
-        <SignupModal 
-          show={showSignup} 
-          handleClose={() => setShowSignup(false)} 
+      {!location.pathname.startsWith("/admin") && (
+        <SignupModal
+          show={showSignup}
+          handleClose={() => setShowSignup(false)}
           showLogin={() => {
             setShowSignup(false);
             setShowLogin(true);

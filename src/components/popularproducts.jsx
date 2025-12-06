@@ -8,9 +8,12 @@ function PopularProduct({ products = [] }) {
   const [addedProduct, setAddedProduct] = useState(null);
   const popularProducts = products.slice(0, 3);
 
+  const getToken = () =>
+    localStorage.getItem("token") || localStorage.getItem("userToken");
+
   const handleAddToCart = async (product) => {
     try {
-      const token = localStorage.getItem("userToken");
+      const token = getToken();
 
       if (!token) {
         alert("Please login to add items to your cart");
@@ -18,7 +21,7 @@ function PopularProduct({ products = [] }) {
       }
 
       await axios.post(
-        "http://localhost:5000/api/cart/add",
+        "https://3-d-backend-3pgu.vercel.app/api/cart/add",
         {
           productId: product._id,
           quantity: 1,
@@ -37,6 +40,8 @@ function PopularProduct({ products = [] }) {
       console.error("Failed to add product to cart", error);
       if (error.response?.status === 401) {
         alert("Your session has expired. Please login again.");
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
         localStorage.removeItem("userToken");
         localStorage.removeItem("userData");
       } else {
@@ -47,17 +52,18 @@ function PopularProduct({ products = [] }) {
 
   // Function to get the correct image URL
   const getImageUrl = (imageUrl) => {
-    if (!imageUrl) return "http://localhost:5000/uploads/default-product.png";
+    if (!imageUrl)
+      return "https://3-d-backend-3pgu.vercel.app/uploads/default-product.png";
 
     if (imageUrl.startsWith("http")) {
       return imageUrl;
     }
 
     if (imageUrl.startsWith("/uploads")) {
-      return `http://localhost:5000${imageUrl}`;
+      return `https://3-d-backend-3pgu.vercel.app${imageUrl}`;
     }
 
-    return `http://localhost:5000/uploads/${imageUrl}`;
+    return `https://3-d-backend-3pgu.vercel.app/uploads/${imageUrl}`;
   };
 
   // Toggle description expansion
@@ -179,7 +185,7 @@ function PopularProduct({ products = [] }) {
                 }}
                 onError={(e) => {
                   e.target.src =
-                    "http://localhost:5000/uploads/default-product.png";
+                    "https://3-d-backend-3pgu.vercel.app/uploads/default-product.png";
                 }}
               />
             </div>
@@ -301,7 +307,7 @@ function PopularProduct({ products = [] }) {
                   gap: "10px",
                 }}
               >
-                <span>${prod.price}</span>
+                <span>£{prod.price}</span>
                 {prod.originalPrice && prod.originalPrice > prod.price && (
                   <span
                     style={{
@@ -312,7 +318,7 @@ function PopularProduct({ products = [] }) {
                       userSelect: "none",
                     }}
                   >
-                    ${prod.originalPrice}
+                    £{prod.originalPrice}
                   </span>
                 )}
               </div>
@@ -419,7 +425,9 @@ function PopularProduct({ products = [] }) {
           }}
         >
           <div style={{ flex: 1 }}>
-            <p style={{ margin: "0 0 8px 0", fontWeight: "bold" }}>✅ Added to Cart!</p>
+            <p style={{ margin: "0 0 8px 0", fontWeight: "bold" }}>
+              ✅ Added to Cart!
+            </p>
             <p style={{ margin: 0, fontSize: "0.9rem" }}>
               {addedProduct?.title} was added to your cart.
             </p>
@@ -444,7 +452,14 @@ function PopularProduct({ products = [] }) {
           </button>
           <button
             onClick={() => setShowCartNotification(false)}
-            style={{ background: "none", border: "none", cursor: "pointer", fontSize: 20, marginLeft: 5, color: "#666" }}
+            style={{
+              background: "none",
+              border: "none",
+              cursor: "pointer",
+              fontSize: 20,
+              marginLeft: 5,
+              color: "#666",
+            }}
           >
             ×
           </button>

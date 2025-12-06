@@ -28,7 +28,8 @@ const ProductsList = ({ products = [], onBuyNow }) => {
 
   // Function to get the correct image URL
   const getImageUrl = (imageUrl) => {
-    if (!imageUrl) return "http://localhost:5000/uploads/default-product.png";
+    if (!imageUrl)
+      return "https://3-d-backend-3pgu.vercel.app/uploads/default-product.png";
     const s = String(imageUrl);
     if (
       s.startsWith("http") ||
@@ -41,9 +42,9 @@ const ProductsList = ({ products = [], onBuyNow }) => {
       return s;
     }
     if (s.startsWith("/uploads")) {
-      return `http://localhost:5000${s}`;
+      return `https://3-d-backend-3pgu.vercel.app${s}`;
     }
-    return `http://localhost:5000/uploads/${s}`;
+    return `https://3-d-backend-3pgu.vercel.app/uploads/${s}`;
   };
 
   // Toggle description expansion
@@ -129,7 +130,8 @@ const ProductsList = ({ products = [], onBuyNow }) => {
               position: "relative",
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.boxShadow = "0 12px 30px rgba(81, 79, 110, 0.2)";
+              e.currentTarget.style.boxShadow =
+                "0 12px 30px rgba(81, 79, 110, 0.2)";
               e.currentTarget.style.borderColor = "#514F6E";
             }}
             onMouseLeave={(e) => {
@@ -194,7 +196,7 @@ const ProductsList = ({ products = [], onBuyNow }) => {
                 }}
                 onError={(e) => {
                   e.target.src =
-                    "http://localhost:5000/uploads/default-product.png";
+                    "https://3-d-backend-3pgu.vercel.app/uploads/default-product.png";
                 }}
               />
             </div>
@@ -314,7 +316,7 @@ const ProductsList = ({ products = [], onBuyNow }) => {
                   gap: "10px",
                 }}
               >
-                <span>${prod.price}</span>
+                <span>£{prod.price}</span>
                 {prod.originalPrice && prod.originalPrice > prod.price && (
                   <span
                     style={{
@@ -325,7 +327,7 @@ const ProductsList = ({ products = [], onBuyNow }) => {
                       userSelect: "none",
                     }}
                   >
-                    ${prod.originalPrice}
+                    £{prod.originalPrice}
                   </span>
                 )}
               </div>

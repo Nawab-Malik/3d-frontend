@@ -4,9 +4,12 @@ export const verifyUser = async () => {
     const token = localStorage.getItem("userToken");
     if (!token) return null;
 
-    const response = await axios.get("http://localhost:5000/api/users/me", {
-      headers: { Authorization: `Bearer ${token}` },
-    });
+    const response = await axios.get(
+      "https://3-d-backend-3pgu.vercel.app/api/users/me",
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
 
     if (response.data.success) {
       return response.data.user;

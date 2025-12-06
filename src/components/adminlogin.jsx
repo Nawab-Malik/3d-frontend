@@ -18,17 +18,19 @@ const AdminLogin = () => {
     setError("");
 
     try {
-      console.log("Attempting login with:", { email, password });
+      const loginData = {
+        email: email.trim().toLowerCase(),
+        password,
+      };
+
+      console.log("Admin login attempt with email:", loginData.email);
 
       const response = await axios.post(
-        "http://localhost:5000/api/users/login",
-        {
-          email,
-          password,
-        }
+        "https://3-d-backend-3pgu.vercel.app/api/users/login",
+        loginData
       );
 
-      console.log("Login response:", response.data);
+      console.log("Admin login response:", response.data);
 
       if (response.data.success) {
         // Check if user is admin
@@ -47,8 +49,8 @@ const AdminLogin = () => {
         }
       }
     } catch (error) {
-      console.error("Login error:", error);
-      console.error("Error response:", error.response);
+      console.error("Admin login error:", error);
+      console.error("Admin login error response:", error.response);
 
       setError(
         error.response?.data?.message || "Login failed. Please try again."

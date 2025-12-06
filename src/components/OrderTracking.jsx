@@ -1,42 +1,51 @@
-import { useState } from 'react';
-import axios from 'axios';
-import './OrderTracking.css';
+import { useState } from "react";
+import axios from "axios";
+import "./OrderTracking.css";
 
 /**
  * Order Tracking Component
  * Allows users to track their orders by order number or email
  */
 const OrderTracking = () => {
-  const [trackingMethod, setTrackingMethod] = useState('orderNo'); // 'orderNo' or 'email'
-  const [orderNo, setOrderNo] = useState('');
-  const [email, setEmail] = useState('');
+  const [trackingMethod, setTrackingMethod] = useState("orderNo"); // 'orderNo' or 'email'
+  const [orderNo, setOrderNo] = useState("");
+  const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [orderData, setOrderData] = useState(null);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   const handleTrack = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setError('');
+    setError("");
     setOrderData(null);
 
     try {
       let response;
 
-      if (trackingMethod === 'orderNo') {
+      if (trackingMethod === "orderNo") {
         response = await axios.get(
-          `${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/tracking/${orderNo}`
+          `${
+            import.meta.env.VITE_API_URL ||
+            "https://3-d-backend-3pgu.vercel.app"
+          }/api/tracking/${orderNo}`
         );
       } else {
         response = await axios.post(
-          `${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/tracking/email`,
+          `${
+            import.meta.env.VITE_API_URL ||
+            "https://3-d-backend-3pgu.vercel.app"
+          }/api/tracking/email`,
           { email, orderNo }
         );
       }
 
       setOrderData(response.data);
     } catch (err) {
-      setError(err.response?.data?.message || 'Order not found. Please check your details.');
+      setError(
+        err.response?.data?.message ||
+          "Order not found. Please check your details."
+      );
     } finally {
       setLoading(false);
     }
@@ -44,33 +53,40 @@ const OrderTracking = () => {
 
   const getStatusIcon = (status) => {
     const icons = {
-      pending: '🕐',
-      confirmed: '✓',
-      processing: '📦',
-      packed: '📦',
-      shipped: '🚚',
-      delivered: '✅',
-      cancelled: '❌',
-      refunded: '💰',
+      pending: "🕐",
+      confirmed: "✓",
+      processing: "📦",
+      packed: "📦",
+      shipped: "🚚",
+      delivered: "✅",
+      cancelled: "❌",
+      refunded: "💰",
     };
-    return icons[status] || '•';
+    return icons[status] || "•";
   };
 
   const getStatusColor = (status) => {
     const colors = {
-      pending: '#ff9800',
-      confirmed: '#2196f3',
-      processing: '#9c27b0',
-      packed: '#673ab7',
-      shipped: '#00bcd4',
-      delivered: '#4caf50',
-      cancelled: '#f44336',
-      refunded: '#607d8b',
+      pending: "#ff9800",
+      confirmed: "#2196f3",
+      processing: "#9c27b0",
+      packed: "#673ab7",
+      shipped: "#00bcd4",
+      delivered: "#4caf50",
+      cancelled: "#f44336",
+      refunded: "#607d8b",
     };
-    return colors[status] || '#666';
+    return colors[status] || "#666";
   };
 
-  const statuses = ['pending', 'confirmed', 'processing', 'packed', 'shipped', 'delivered'];
+  const statuses = [
+    "pending",
+    "confirmed",
+    "processing",
+    "packed",
+    "shipped",
+    "delivered",
+  ];
 
   return (
     <div className="order-tracking">
@@ -82,21 +98,21 @@ const OrderTracking = () => {
       <div className="tracking-form-container">
         <div className="tracking-method-toggle">
           <button
-            className={trackingMethod === 'orderNo' ? 'active' : ''}
-            onClick={() => setTrackingMethod('orderNo')}
+            className={trackingMethod === "orderNo" ? "active" : ""}
+            onClick={() => setTrackingMethod("orderNo")}
           >
             Track by Order Number
           </button>
           <button
-            className={trackingMethod === 'email' ? 'active' : ''}
-            onClick={() => setTrackingMethod('email')}
+            className={trackingMethod === "email" ? "active" : ""}
+            onClick={() => setTrackingMethod("email")}
           >
             Track by Email
           </button>
         </div>
 
         <form onSubmit={handleTrack} className="tracking-form">
-          {trackingMethod === 'orderNo' ? (
+          {trackingMethod === "orderNo" ? (
             <div className="form-group">
               <label>Order Number</label>
               <input
@@ -133,7 +149,7 @@ const OrderTracking = () => {
           )}
 
           <button type="submit" disabled={loading} className="track-btn">
-            {loading ? 'Tracking...' : 'Track Order'}
+            {loading ? "Tracking..." : "Track Order"}
           </button>
         </form>
 
@@ -165,13 +181,15 @@ const OrderTracking = () => {
               return (
                 <div
                   key={status}
-                  className={`timeline-item ${isCompleted ? 'completed' : ''} ${
-                    isCurrent ? 'current' : ''
+                  className={`timeline-item ${isCompleted ? "completed" : ""} ${
+                    isCurrent ? "current" : ""
                   }`}
                 >
                   <div className="timeline-icon">{getStatusIcon(status)}</div>
                   <div className="timeline-label">{status}</div>
-                  {index < statuses.length - 1 && <div className="timeline-line" />}
+                  {index < statuses.length - 1 && (
+                    <div className="timeline-line" />
+                  )}
                 </div>
               );
             })}
@@ -211,7 +229,7 @@ const OrderTracking = () => {
                   <img src={item.product.imageUrl} alt={item.product.title} />
                 )}
                 <div className="item-details">
-                  <h4>{item.product?.title || 'Product'}</h4>
+                  <h4>{item.product?.title || "Product"}</h4>
                   <p>
                     Quantity: {item.quantity} × £{item.price.toFixed(2)}
                   </p>
@@ -225,11 +243,13 @@ const OrderTracking = () => {
           <div className="shipping-address">
             <h3>Shipping Address</h3>
             <p>
-              {orderData.shippingAddress.firstName} {orderData.shippingAddress.lastName}
+              {orderData.shippingAddress.firstName}{" "}
+              {orderData.shippingAddress.lastName}
               <br />
               {orderData.shippingAddress.address}
               <br />
-              {orderData.shippingAddress.city}, {orderData.shippingAddress.state}{' '}
+              {orderData.shippingAddress.city},{" "}
+              {orderData.shippingAddress.state}{" "}
               {orderData.shippingAddress.postalCode}
               <br />
               {orderData.shippingAddress.country}
