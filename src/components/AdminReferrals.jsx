@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import "./AdminPanel.css";
+import "./adminpanel.css";
 
 const AdminReferrals = () => {
   const [referrals, setReferrals] = useState([]);
