@@ -31,7 +31,6 @@ import FeedbackPage from "./pages/feedback";
 
 import AnnouncementBar from "./components/AnnouncementBar";
 import EmailPopup from "./components/EmailPopup";
-import LiveChat from "./components/LiveChat";
 
 // New pages
 import CheckoutPage from "./pages/CheckoutPage";
@@ -148,7 +147,6 @@ function App() {
       </Routes>
       {/* Global Components */}
       <EmailPopup />
-      <LiveChat /> {/* ✅ Only loads when user is authenticated */}
     </>
   );
 }

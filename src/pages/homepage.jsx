@@ -12,6 +12,7 @@ import Footer from "../components/footer";
 import localProducts from "../data/products.json";
 import AnnouncementPopup from "../components/AnnouncementPopup";
 import CouponPopup from "../components/CouponPopup";
+import LiveChat from "../components/LiveChat";
 console.log(import.meta.env.VITE_API_URL);
 
 function HomePage() {
@@ -176,6 +177,7 @@ function HomePage() {
       <Footer />
       <AnnouncementPopup />
       <CouponPopup />
+      <LiveChat />
     </>
   );
 }
